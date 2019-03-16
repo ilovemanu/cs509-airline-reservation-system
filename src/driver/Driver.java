@@ -54,7 +54,7 @@ public class Driver {
 //			System.out.println(airplane.toString());
 //		}
 
-		// Try to get a list of flights with a given departure date(2019_05_10) and a query departureCode
+		// Try to get a list of flights with a given departure date(2019_05_10) and a query departureCode.
 		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode);
 		Collections.sort(flights);
 		for (Flight flight : flights) {
