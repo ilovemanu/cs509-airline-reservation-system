@@ -17,7 +17,7 @@ import dao.ServerInterface;
 /**
  * @author blake and alex
  * @since 2016-02-24
- * @version 1.0
+ * @version 1.0 2019-03-16
  *
  */
 public class Driver {
@@ -55,7 +55,7 @@ public class Driver {
 //		}
 
 		// Try to get a list of flights with a given departure date(2019_05_10) and a query departureCode.
-		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode);
+		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase());
 		Collections.sort(flights);
 		for (Flight flight : flights) {
 			System.out.println(flight.toString());

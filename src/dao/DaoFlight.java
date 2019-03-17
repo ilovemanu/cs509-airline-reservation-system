@@ -109,7 +109,7 @@ public class DaoFlight {
         Element elementArrivalCode = (Element)elementArrival.getElementsByTagName("Code").item(0);
         arrivalAirport = getCharacterDataFromElement(elementArrivalCode);
         Element elementArrivalTime = (Element)elementArrival.getElementsByTagName("Time").item(0);
-        arrivalTime = getCharacterDataFromElement(elementArrivalCode);
+        arrivalTime = getCharacterDataFromElement(elementArrivalTime);
 
         // <seating></seating>
         Element elementSeating = (Element)elementFlight.getElementsByTagName("Seating").item(0);
