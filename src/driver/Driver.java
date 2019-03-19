@@ -32,7 +32,7 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		// check invalid arguments
-		if (args.length > 2) {
+		if (args.length != 3) {
 			System.err.println("Check arguments!");
 			System.exit(-1);
 			return;
@@ -40,6 +40,7 @@ public class Driver {
 		
 		String teamName = args[0];
 		String departureCode = args[1];
+		String departureTime = args[2];
 
 //		// Try to get a list of airports
 //		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
@@ -54,12 +55,13 @@ public class Driver {
 //			System.out.println(airplane.toString());
 //		}
 
-		// Try to get a list of flights with a given departure date(2019_05_10) and a query departureCode.
-		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase());
+		// Try to get a list of flights
+		// with a query departureCode(case-insensitive)
+		// and a query departure date(yyyy_mm_dd).
+		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase(), departureTime);
 		Collections.sort(flights);
 		for (Flight flight : flights) {
 			System.out.println(flight.toString());
 		}
-
 	}
 }

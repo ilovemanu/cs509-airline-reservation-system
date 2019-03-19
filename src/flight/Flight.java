@@ -3,10 +3,10 @@
  */
 package flight;
 
-import airplane.Airplane;
-import airport.Airport;
-
 import java.util.Comparator;
+import java.time.LocalDateTime;
+import utils.Saps;
+
 
 /**
  * This class holds values pertaining to a single Flight. Class member attributes
@@ -38,10 +38,10 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
     private String mArrivalAirport;
     /*
      * Departure and Arrival time of the flight.
-     * Set to String for now.
+     * Set to LocalDateTime.
      */
-    private String mDepartureTime;
-    private String mArrivalTime;
+    private LocalDateTime mDepartureTime;
+    private LocalDateTime mArrivalTime;
     /*
      * firstClass and coachPrice
      * Set to String for now.
@@ -69,8 +69,8 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
         mNumber = "";
         mDepartureAirport = "";
         mArrivalAirport = "";
-        mDepartureTime = "";
-        mArrivalTime = "";
+        mDepartureTime = LocalDateTime.now();
+        mArrivalTime = LocalDateTime.now();
         mFirstClassPrice = "";
         mCoachPrice = "";
         mFirstClassReserved = Integer.MAX_VALUE;
@@ -86,7 +86,7 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
      * @post member attributes are initialized with input parameter values
      */
     public Flight(String airplane, int flightTime, String number, String departureAirport,
-                  String arrivalAirport, String departureTime, String arrivalTime,
+                  String arrivalAirport, LocalDateTime departureTime, LocalDateTime arrivalTime,
                   String firstClassPrice, String coachPrice,
                   int firstClassReserved, int coachReserved) {
 
@@ -100,10 +100,12 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
             throw new IllegalArgumentException(departureAirport);
         if (!isValidCode(arrivalAirport))
             throw new IllegalArgumentException(arrivalAirport);
-        if (!isValidString(departureTime))
-            throw new IllegalArgumentException(departureTime);
-        if (!isValidString(arrivalTime))
-            throw new IllegalArgumentException(arrivalTime);
+        // departure time
+        if (!isValidTime(departureTime))
+            throw new IllegalArgumentException(departureTime.toString());
+        // arrival time
+        if (!isValidTime(arrivalTime))
+            throw new IllegalArgumentException(arrivalTime.toString());
         if (!isValidString(firstClassPrice))
             throw new IllegalArgumentException(firstClassPrice);
         if (!isValidString(coachPrice))
@@ -246,13 +248,13 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
      * @throws IllegalArgumentException if departureTime is invalid
      * @return departureTime
      */
-    public void departureTime(String departureTime) {
-        if (isValidString(departureTime))
+    public void departureTime(LocalDateTime departureTime) {
+        if (isValidTime(departureTime))
             mDepartureTime = departureTime;
         else
-            throw new IllegalArgumentException(departureTime);
+            throw new IllegalArgumentException(departureTime.toString());
     }
-    public String departureTime() {
+    public LocalDateTime departureTime() {
         return mDepartureTime;
     }
 
@@ -263,13 +265,13 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
      * @throws IllegalArgumentException if arrivalTime is invalid
      * @return arrivalTime
      */
-    public void arrivalTime(String arrivalTime) {
-        if (isValidString(arrivalTime))
+    public void arrivalTime(LocalDateTime arrivalTime) {
+        if (isValidTime(arrivalTime))
             mArrivalTime = arrivalTime;
         else
-            throw new IllegalArgumentException(arrivalTime);
+            throw new IllegalArgumentException(arrivalTime.toString());
     }
-    public String arrivalTime() {
+    public LocalDateTime arrivalTime() {
         return mArrivalTime;
     }
 
@@ -416,5 +418,20 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
         return true;
     }
 
+    /**
+     * Check for departure and arrival time
+     *
+     * @param time is the time for departure or arrival
+     * @return false if null or exceeds limits, else assume valid and return true
+     */
+    public boolean isValidTime (LocalDateTime time) {
+        if ((time == null)
+                || time.getYear() != Saps.DEFAULT_YEAR
+                || time.getMonthValue() != Saps.DEFAULT_MONTH
+                || time.getDayOfMonth() > Saps.MAX_DATE
+                || time.getDayOfMonth() < Saps.MIN_DATE)
+            return false;
+        return true;
+    }
 
 }

@@ -36,12 +36,14 @@ public class QueryFactory {
 	 *
 	 * @param teamName
 	 * @param departureCode
+	 * @param departureTime
 	 * @return the query String which can be appended to URL to form HTTP GET request
 	 */
 	public static String getFlights(String teamName,
-									String departureCode) {
-		return String.format("?team=%s&action=list&list_type=departing&airport=%s&day=2019_05_10",
-				teamName, departureCode);
+									String departureCode,
+									String departureTime) {
+		return String.format("?team=%s&action=list&list_type=departing&airport=%s&day=%s",
+				teamName, departureCode, departureTime);
 	}
 
 	/**

@@ -18,6 +18,9 @@ import org.xml.sax.SAXException;
 import flight.Flight;
 import flight.Flights;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * @author blake and alex
  * @version 1 2019-03-16
@@ -83,12 +86,17 @@ public class DaoFlight {
         String number;
         String departureAirport;
         String arrivalAirport;
-        String departureTime;
-        String arrivalTime;
+        String departureTimeString;
+        String arrivalTimeString;
+        LocalDateTime departureTime;
+        LocalDateTime arrivalTime;
         String firsClassPrice;
         String coachPrice;
         int firstClassReserved;
         int coachReserved;
+
+        // Set the format for time strings
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm zzz");
 
         // The flight element has attributes of airplane, flightTime, and number
         Element elementFlight = (Element) nodeFlight;
@@ -97,21 +105,33 @@ public class DaoFlight {
         number = elementFlight.getAttribute("Number");
 
         // The rest are child elements
-        // <departure></departure>
+        /*
+         * <departure></departure>
+         */
         Element elementDeparture = (Element)elementFlight.getElementsByTagName("Departure").item(0);
         Element elementDepartureCode = (Element)elementDeparture.getElementsByTagName("Code").item(0);
         departureAirport = getCharacterDataFromElement(elementDepartureCode);
         Element elementDepartureTime = (Element)elementDeparture.getElementsByTagName("Time").item(0);
-        departureTime = getCharacterDataFromElement(elementDepartureTime);
+        // Get formatted GMT time from string
+        departureTimeString = getCharacterDataFromElement(elementDepartureTime);
+        departureTime = LocalDateTime.parse(departureTimeString, formatter);
 
-        // <arrival></arrival>
+
+        /*
+         * <arrival></arrival>
+         */
         Element elementArrival = (Element)elementFlight.getElementsByTagName("Arrival").item(0);
         Element elementArrivalCode = (Element)elementArrival.getElementsByTagName("Code").item(0);
         arrivalAirport = getCharacterDataFromElement(elementArrivalCode);
         Element elementArrivalTime = (Element)elementArrival.getElementsByTagName("Time").item(0);
-        arrivalTime = getCharacterDataFromElement(elementArrivalTime);
+        // Get formatted GMT time from string
+        arrivalTimeString = getCharacterDataFromElement(elementArrivalTime);
+        arrivalTime = LocalDateTime.parse(arrivalTimeString, formatter);
 
-        // <seating></seating>
+
+        /*
+         * <seating></seating>
+         */
         Element elementSeating = (Element)elementFlight.getElementsByTagName("Seating").item(0);
         Element elementFirstClass = (Element)elementSeating.getElementsByTagName("FirstClass").item(0);
         firsClassPrice = elementFirstClass.getAttributeNode("Price").getValue();
