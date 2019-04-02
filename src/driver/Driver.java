@@ -12,6 +12,7 @@ import airplane.Airplanes;
 import flight.Flight;
 import flight.Flights;
 import dao.ServerInterface;
+import system.FlightController;
 
 
 /**
@@ -32,15 +33,30 @@ public class Driver {
 	 */
 	public static void main(String[] args) {
 		// check invalid arguments
-		if (args.length != 3) {
+		if (args.length != 4) {
 			System.err.println("Check arguments!");
 			System.exit(-1);
 			return;
 		}
-		
-		String teamName = args[0];
-		String departureCode = args[1];
-		String departureTime = args[2];
+
+		String departureCode = args[0].toUpperCase();
+		String departureTime = args[1];
+		String arrivalCode = args[2].toUpperCase();
+		String seatClass = args[3];
+
+		// Try to get a list of nonstop flights
+		// with defined departure and arrival and seatClass
+		FlightController controller = new FlightController();
+		Flights flights = controller.searchNonstop(departureCode,departureTime,arrivalCode,seatClass);
+		Collections.sort(flights);
+		if (flights.size() == 0) {
+			System.out.println("No non-stop flights available.");
+		}else{
+			for (Flight flight : flights) {
+				System.out.println(flight.toString());
+			}
+		}
+
 
 //		// Try to get a list of airports
 //		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
@@ -55,13 +71,14 @@ public class Driver {
 //			System.out.println(airplane.toString());
 //		}
 
-		// Try to get a list of flights
-		// with a query departureCode(case-insensitive)
-		// and a query departure date(yyyy_mm_dd).
-		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase(), departureTime);
-		Collections.sort(flights);
-		for (Flight flight : flights) {
-			System.out.println(flight.toString());
-		}
+//		// Try to get a list of flights
+//		// with a query departureCode(case-insensitive)
+//		// and a query departure date(yyyy_mm_dd).
+//		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase(), departureTime);
+//		Collections.sort(flights);
+//		for (Flight flight : flights) {
+//			System.out.println(flight.toString());
+//		}
+
 	}
 }

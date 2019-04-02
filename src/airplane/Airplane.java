@@ -24,11 +24,11 @@ public class Airplane implements Comparable<Airplane>, Comparator<Airplane> {
      * Airplane attributes as defined by the CS509 server interface XML
      */
 
-    /**
-     * Seat classes of the airplane
-     */
-    public static String COACH = "Coach";
-    public static String FIRSTCLASS = "FirstClass";
+//    /**
+//     * Seat classes of the airplane
+//     */
+//    public static String COACH = "Coach";
+//    public static String FIRSTCLASS = "FirstClass";
 
     /**
      * Manufacturer of the airplane

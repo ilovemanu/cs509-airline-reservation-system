@@ -160,7 +160,8 @@ public enum ServerInterface {
 	 * @param departureCode is the code for departure airport
 	 * @return
 	 */
-	public Flights getFlights (String teamName, String departureCode, String departureTime) {
+	public Flights getFlights (String teamName, String departureCode,
+							   String departureTime) {
 
 		URL url;
 		HttpURLConnection connection;
@@ -176,7 +177,8 @@ public enum ServerInterface {
 			 * Create an HTTP connection to the server for a GET
 			 * QueryFactory provides the parameter annotations for the HTTP GET query string
 			 */
-			url = new URL(mUrlBase + QueryFactory.getFlights(teamName, departureCode, departureTime));
+			url = new URL(mUrlBase
+					+ QueryFactory.getFlights(teamName, departureCode, departureTime));
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("User-Agent", teamName);
