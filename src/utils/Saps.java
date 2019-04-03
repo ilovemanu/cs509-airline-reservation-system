@@ -34,4 +34,11 @@ public class Saps {
 	public static final int MIN_MINUTE = 0;
 	public static final int MAX_MINUTE = 59;
 
+	/**
+	 * Constant values used for latitude and longitude range validation
+	 */
+	public static final int MAX_LAYOVER = 2;
+	public static final long MAX_LAYOVER_TIME = 120; //in minutes
+	public static final long MIN_LAYOVER_TIME = 30;
+
 }

@@ -24,12 +24,6 @@ public class Airplane implements Comparable<Airplane>, Comparator<Airplane> {
      * Airplane attributes as defined by the CS509 server interface XML
      */
 
-//    /**
-//     * Seat classes of the airplane
-//     */
-//    public static String COACH = "Coach";
-//    public static String FIRSTCLASS = "FirstClass";
-
     /**
      * Manufacturer of the airplane
      */
@@ -249,21 +243,21 @@ public class Airplane implements Comparable<Airplane>, Comparator<Airplane> {
     }
 
 
-//    /**
-//     * Determine if object instance has valid attribute data
-//     * <p>
-//     * Verifies the manufacturer and model are not null and not an empty strings.
-//     * Verifies the seats are valid integers.
-//     *
-//     * @return true if object passes above validation checks
-//     */
-//    public boolean isValid() {
-//
-//        return isValidString(mManufacturer)
-//                && isValidString(mModel)
-//                && isValidSeats(mFirstClassSeats)
-//                && isValidSeats(mCoachSeats);
-//    }
+    /**
+     * Determine if object instance has valid attribute data
+     * <p>
+     * Verifies the manufacturer and model are not null and not an empty strings.
+     * Verifies the seats are valid integers.
+     *
+     * @return true if object passes above validation checks
+     */
+    public boolean isValid() {
+
+        return isValidString(mManufacturer)
+                && isValidString(mModel)
+                && isValidSeats(mFirstClassSeats)
+                && isValidSeats(mCoachSeats);
+    }
 
     /**
      * Check for invalid strings

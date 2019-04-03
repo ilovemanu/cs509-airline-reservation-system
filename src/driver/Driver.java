@@ -3,6 +3,7 @@
  */
 package driver;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import airport.Airport;
@@ -18,7 +19,7 @@ import system.FlightController;
 /**
  * @author blake and alex
  * @since 2016-02-24
- * @version 1.0 2019-03-16
+ * @version 1.1 2019-04-03
  *
  */
 public class Driver {
@@ -44,16 +45,19 @@ public class Driver {
 		String arrivalCode = args[2].toUpperCase();
 		String seatClass = args[3];
 
-		// Try to get a list of nonstop flights
+		// Try to get a list of all matching flights
 		// with defined departure and arrival and seatClass
+		// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach]
 		FlightController controller = new FlightController();
-		Flights flights = controller.searchNonstop(departureCode,departureTime,arrivalCode,seatClass);
-		Collections.sort(flights);
+		ArrayList<ArrayList<String>> flights = controller.searchFlight(departureCode,departureTime,arrivalCode,seatClass);
+//		Collections.sort(flights);
 		if (flights.size() == 0) {
-			System.out.println("No non-stop flights available.");
-		}else{
-			for (Flight flight : flights) {
-				System.out.println(flight.toString());
+			System.out.println("No " + seatClass + " flights available.");
+		} else {
+			for (ArrayList flight : flights) {
+				for (Object f : flight)
+					System.out.println(f);
+					System.out.println();
 			}
 		}
 
