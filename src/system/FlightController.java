@@ -10,6 +10,7 @@ import utils.Saps;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +20,8 @@ import java.util.Set;
 /**
  * This class is the interface between user and server.
  * It holds logic needed to match flights using user inputs.
- * @author alex
- * @version 1.1 2019-04-03
+ * @author alex and liz
+ * @version 1.2 2019-04-09
  * @since 2019-04-01
  *
  */
@@ -29,7 +30,8 @@ public class FlightController {
 
     private static final String teamName = "GompeiSquad";
     private Map<String, Airplane> airplaneMap;
-
+    // format the time
+    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
     public FlightController() {
         // initiate the [model, airplane] hashmap
         setAirplaneMap();
@@ -72,86 +74,121 @@ public class FlightController {
      * @param seatClass is the string value for seat classes
      * @return An list of list including all flight combinations
      */
-    public ArrayList<ArrayList<String>> searchFlight(String depAirport,
-                                                      String depTime,
-                                                      String arrAirport,
-                                                      String seatClass) {
+    public ArrayList<ArrayList<Flight>> searchFlight(String depAirport, String depTime, String arrAirport, String seatClass) {
+        ArrayList<ArrayList<Flight>> allList = new ArrayList();
+        searchFlightDFS(allList, new ArrayList<Flight>(), depAirport, depTime, arrAirport, seatClass);
+        return allList;
+    }
 
-        ArrayList<ArrayList<String>> nonStopList = new ArrayList<ArrayList<String>>();
-        ArrayList<ArrayList<String>> oneStopList = new ArrayList<ArrayList<String>>();
-        ArrayList<ArrayList<String>> twoStopList = new ArrayList<ArrayList<String>>();
-
-        // leg1
-        Flights flightsOne = ServerInterface.INSTANCE.getFlights(teamName,depAirport,depTime);
-        for (Flight f: flightsOne) {
-
-            // save leg1 arrival airport
-            String arrCode = f.arrivalAirport();
-            // check seat constraint
-            if (isSeatAvailable(f, seatClass)) {
-                // save non-stop flights if arrival airport matches
-                if (arrCode.equalsIgnoreCase(arrAirport)) {
-                    ArrayList<String> temp = new ArrayList<>();
-                    temp.add(f.toString());
-                    nonStopList.add(temp);
+    public void searchFlightDFS(ArrayList<ArrayList<Flight>> res, ArrayList<Flight> subres,
+                                String depAirport, String depTime, String arrAirport,String seatClass) {
+        // skip the case when subres is empty at first
+        // get the last element in subres and check if reach the destination
+        if(!subres.isEmpty() && subres.get(subres.size()-1).arrivalAirport().equalsIgnoreCase(arrAirport)) {
+            res.add(new ArrayList(subres));
+            return;
+        }
+        // if subres length equal to max layover + 1 (the length should be 3 because the departure airport + max 2 stops)
+        if(subres.size()==Saps.MAX_LAYOVER+1) {
+            return;
+        }
+        Flights resFlights = ServerInterface.INSTANCE.getFlights(teamName, depAirport, depTime);
+        for(Flight f:resFlights) {
+            if(isSeatAvailable(f, seatClass)) {
+                // if there's at least 1 element in subres, check the layover time, if layover time is invalid then skip
+                if(subres.size()>=1) {
+                    if(!isValidLayover(subres.get(subres.size()-1).arrivalTime(),f.departureTime())) continue;
                 }
-                else {
-                    // save leg1 arrival airport and time for matching leg2
-                    LocalDateTime arrTime_1 = f.arrivalTime();
-                    String arrCode_1 = f.arrivalAirport();
-                    // create an list for leg1&2 combo
-                    ArrayList<String> temp_1 = new ArrayList<>();
-                    temp_1.add(f.toString());
-
-                    // leg2
-                    Flights flightsTwo = ServerInterface.INSTANCE.getFlights(teamName,arrCode_1,depTime);
-                    // add layover time and seat constraint
-                    for (Flight f2: flightsTwo) {
-                        // save leg2 arrival airport and departure time
-                        // TO DO: when converted to local time, need another constraint to limit arrival time
-                        String arrCode2 = f2.arrivalAirport();
-                        LocalDateTime depTime_2 = f2.departureTime();
-
-                        // check seat and layover time constraints
-                        if (isValid(f2, seatClass,
-                                arrTime_1, depTime_2)) {
-                            // save one-stop flights if arrival airport matches
-                            if (arrCode2.equalsIgnoreCase(arrAirport)) {
-                                temp_1.add(f2.toString());
-                                oneStopList.add(temp_1);
-                            }
-                            else {
-                                // save leg2 arrival time for matching leg3
-                                LocalDateTime arrTime_2 = f2.arrivalTime();
-                                // create an list for leg1&2&3 combo
-                                ArrayList<String> temp_2 = new ArrayList<>();
-                                temp_2.add(f.toString());
-                                temp_2.add(f2.toString());
-
-                                // leg3
-                                Flights flightsThree = ServerInterface.INSTANCE.getFlights(teamName,arrCode2,depTime);
-                                for (Flight f3: flightsThree) {
-                                    // save leg3 arrival airport and departure time
-                                    // TO DO: when converted to local time, need another constraint to limit arrival time
-                                    String arrCode3 = f3.arrivalAirport();
-                                    LocalDateTime depTime_3 = f3.departureTime();
-                                    // save two-stop flights if arrival airport matches final arrival airport
-                                    if (isValid(f3, seatClass, arrTime_2, depTime_3)
-                                            && arrCode3.equalsIgnoreCase(arrAirport)) {
-                                        temp_2.add(f3.toString());
-                                        twoStopList.add(temp_2);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                // add element (flight) if is valid
+                subres.add(f);
+                // do recursion
+                searchFlightDFS(res, subres, f.arrivalAirport(), f.arrivalTime().format(formatter), arrAirport, seatClass);
+                // remove the last element we add and then continue to do the iteration
+                subres.remove(subres.size()-1);
             }
         }
-        oneStopList.addAll(twoStopList);
-        nonStopList.addAll(oneStopList);
-        return nonStopList;
+
     }
+//    public ArrayList<ArrayList<String>> searchFlight(String depAirport,
+//                                                      String depTime,
+//                                                      String arrAirport,
+//                                                      String seatClass) {
+//
+//        ArrayList<ArrayList<String>> nonStopList = new ArrayList<ArrayList<String>>();
+//        ArrayList<ArrayList<String>> oneStopList = new ArrayList<ArrayList<String>>();
+//        ArrayList<ArrayList<String>> twoStopList = new ArrayList<ArrayList<String>>();
+//
+//        // leg1
+//        Flights flightsOne = ServerInterface.INSTANCE.getFlights(teamName,depAirport,depTime);
+//        for (Flight f: flightsOne) {
+//
+//            // save leg1 arrival airport
+//            String arrCode = f.arrivalAirport();
+//            // check seat constraint
+//            if (isSeatAvailable(f, seatClass)) {
+//                // save non-stop flights if arrival airport matches
+//                if (arrCode.equalsIgnoreCase(arrAirport)) {
+//                    ArrayList<String> temp = new ArrayList<>();
+//                    temp.add(f.toString());
+//                    nonStopList.add(temp);
+//                }
+//                else {
+//                    // save leg1 arrival airport and time for matching leg2
+//                    LocalDateTime arrTime_1 = f.arrivalTime();
+//                    String arrCode_1 = f.arrivalAirport();
+//                    // create an list for leg1&2 combo
+//                    ArrayList<String> temp_1 = new ArrayList<>();
+//                    temp_1.add(f.toString());
+//
+//                    // leg2
+//                    Flights flightsTwo = ServerInterface.INSTANCE.getFlights(teamName,arrCode_1,depTime);
+//                    // add layover time and seat constraint
+//                    for (Flight f2: flightsTwo) {
+//                        // save leg2 arrival airport and departure time
+//                        // TO DO: when converted to local time, need another constraint to limit arrival time
+//                        String arrCode2 = f2.arrivalAirport();
+//                        LocalDateTime depTime_2 = f2.departureTime();
+//
+//                        // check seat and layover time constraints
+//                        if (isValid(f2, seatClass,
+//                                arrTime_1, depTime_2)) {
+//                            // save one-stop flights if arrival airport matches
+//                            if (arrCode2.equalsIgnoreCase(arrAirport)) {
+//                                temp_1.add(f2.toString());
+//                                oneStopList.add(temp_1);
+//                            }
+//                            else {
+//                                // save leg2 arrival time for matching leg3
+//                                LocalDateTime arrTime_2 = f2.arrivalTime();
+//                                // create an list for leg1&2&3 combo
+//                                ArrayList<String> temp_2 = new ArrayList<>();
+//                                temp_2.add(f.toString());
+//                                temp_2.add(f2.toString());
+//
+//                                // leg3
+//                                Flights flightsThree = ServerInterface.INSTANCE.getFlights(teamName,arrCode2,depTime);
+//                                for (Flight f3: flightsThree) {
+//                                    // save leg3 arrival airport and departure time
+//                                    // TO DO: when converted to local time, need another constraint to limit arrival time
+//                                    String arrCode3 = f3.arrivalAirport();
+//                                    LocalDateTime depTime_3 = f3.departureTime();
+//                                    // save two-stop flights if arrival airport matches final arrival airport
+//                                    if (isValid(f3, seatClass, arrTime_2, depTime_3)
+//                                            && arrCode3.equalsIgnoreCase(arrAirport)) {
+//                                        temp_2.add(f3.toString());
+//                                        twoStopList.add(temp_2);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        oneStopList.addAll(twoStopList);
+//        nonStopList.addAll(oneStopList);
+//        return nonStopList;
+//    }
 
     /**
      * Check for available seats given a flight and the seat class

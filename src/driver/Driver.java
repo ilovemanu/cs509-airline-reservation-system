@@ -17,9 +17,9 @@ import system.FlightController;
 
 
 /**
- * @author blake and alex
+ * @author blake, alex and liz
  * @since 2016-02-24
- * @version 1.1 2019-04-03
+ * @version 1.2 2019-04-09
  *
  */
 public class Driver {
@@ -49,15 +49,16 @@ public class Driver {
 		// with defined departure and arrival and seatClass
 		// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach]
 		FlightController controller = new FlightController();
-		ArrayList<ArrayList<String>> flights = controller.searchFlight(departureCode,departureTime,arrivalCode,seatClass);
+		ArrayList<ArrayList<Flight>> flights = controller.searchFlight(departureCode,departureTime,arrivalCode,seatClass);
 //		Collections.sort(flights);
 		if (flights.size() == 0) {
 			System.out.println("No " + seatClass + " flights available.");
 		} else {
-			for (ArrayList flight : flights) {
-				for (Object f : flight)
-					System.out.println(f);
-					System.out.println();
+			for (ArrayList<Flight> flightList : flights) {
+				for (Flight f : flightList) {
+					System.out.println(f.toString());
+				}
+				System.out.println();
 			}
 		}
 
