@@ -19,7 +19,7 @@ import java.util.*;
  * It holds logic needed to match flights using user inputs.
  *
  * @author alex and liz
- * @version 1.2 2019-04-09
+ * @version 1.3 2019-04-11
  * @since 2019-04-01
  */
 
@@ -27,17 +27,19 @@ public class FlightController {
 
     private static final String teamName = "GompeiSquad";
     private Map<String, Airplane> airplaneMap;
+    private Map<String, Flights> flightsMap;
     // format the time
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
     public FlightController() {
         // initiate the [model, airplane] hashmap
         setAirplaneMap();
+        flightsMap = new HashMap();
     }
 
 
     /**
-     * Search flights given user inputs (up to 2 layovers)
+     * Search flight by departure date
      *
      * @param depAirport is the departure airport code
      * @param arrAirport is the arrival airport code
@@ -45,13 +47,16 @@ public class FlightController {
      * @param seatClass  is the string value for seat classes
      * @return An list of list including all flight combinations
      */
-    public ArrayList<ArrayList<Flight>> searchFlight(String depAirport, String depTime, String arrAirport, String seatClass) {
+    public ArrayList<ArrayList<Flight>> searchDepTimeFlight(String depAirport, String depTime, String arrAirport, String seatClass) {
         ArrayList<ArrayList<Flight>> allList = new ArrayList();
-        searchFlightDFS(allList, new ArrayList<Flight>(), depAirport, depTime, arrAirport, seatClass);
+        depTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, depTime, arrAirport, seatClass);
         return allList;
     }
 
-    public void searchFlightDFS(ArrayList<ArrayList<Flight>> res, ArrayList<Flight> subres,
+    /**
+     * Use DFS algorithm to implement search flight by departure date
+     */
+    public void depTimeFlightDFS(ArrayList<ArrayList<Flight>> res, ArrayList<Flight> subres,
                                 String depAirport, String depTime, String arrAirport, String seatClass) {
         // skip the case when subres is empty at first
         // get the last element in subres and check if reach the destination
@@ -63,24 +68,121 @@ public class FlightController {
         if (subres.size() == Saps.MAX_LAYOVER + 1) {
             return;
         }
-        Flights resFlights = ServerInterface.INSTANCE.getFlights(teamName, depAirport, depTime);
-        for (Flight f : resFlights) {
-            if (isSeatAvailable(f, seatClass)) {
-                // if there's at least 1 element in subres, check the layover time, if layover time is invalid then skip
-                if (subres.size() >= 1) {
-                    if (!isValidLayover(subres.get(subres.size() - 1).arrivalTime(), f.departureTime())) continue;
-                }
-                // add element (flight) if is valid
-                subres.add(f);
-                // do recursion
-                searchFlightDFS(res, subres, f.arrivalAirport(), f.arrivalTime().format(formatter), arrAirport, seatClass);
-                // remove the last element we add and then continue to do the iteration
-                subres.remove(subres.size() - 1);
+        // pass departing to server to get the list of flights departure at an airport
+        Flights resFlights = getFromMapOrServer(depAirport, depTime, "departing");
+        // if there's at least 1 element in subres
+        if (subres.size() >= 1) {
+            // get last flight to calculate layover time
+            Flight lastFlight = subres.get(subres.size() - 1);
+            // check if next day is still in valid layover time range
+            // max layover time is 2hr so 22:00 to next day is still in layover time range
+            LocalDateTime arrTime = lastFlight.arrivalTime();
+            int hr = arrTime.getHour();
+            String nextDay = arrTime.plusDays(1).format(formatter);
+            if (hr >= 22) {
+                Flights nextDayFlights = getFromMapOrServer(depAirport, nextDay, "departing");
+                resFlights.addAll(nextDayFlights);
             }
         }
 
+        for (Flight f : resFlights) {
+            if (isSeatAvailable(f, seatClass)) {
+                // if there's at least 1 element in subres, check if layover time is invalid and then skip
+                if (subres.size() >= 1) {
+                    if (!isValidLayover(subres.get(subres.size() - 1).arrivalTime(), f.departureTime())) continue;
+                }
+                // add element (flight) if it's valid
+                subres.add(f);
+                // do recursion
+                depTimeFlightDFS(res, subres, f.arrivalAirport(), f.arrivalTime().format(formatter), arrAirport, seatClass);
+                // remove the last element we add and then continue to do the iteration
+                subres.remove(subres.size()-1);
+            }
+        }
     }
 
+    /**
+     * Search flight by arrival date
+     *
+     * @param depAirport is the departure airport code
+     * @param arrAirport is the arrival airport code
+     * @param arrTime    is the arrival time
+     * @param seatClass  is the string value for seat classes
+     * @return An list of list including all flight combinations
+     */
+    public ArrayList<ArrayList<Flight>> searchArrTimeFlight(String depAirport, String arrTime, String arrAirport, String seatClass) {
+        ArrayList<ArrayList<Flight>> allList = new ArrayList();
+        arrTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, arrTime, arrAirport, seatClass);
+        // reverse list because tracing back to do arrival time
+        for (ArrayList<Flight> list:allList) {
+            Collections.reverse(list);
+        }
+        return allList;
+    }
+
+    /**
+     * Use DFS algorithm to implement search flight by arrival date
+     */
+    public void arrTimeFlightDFS(ArrayList<ArrayList<Flight>> res, ArrayList<Flight> subres,
+                                 String depAirport, String arrTime, String arrAirport, String seatClass) {
+        // skip the case when subres is empty at first
+        // get the last element in subres and check if reach the destination
+        if (!subres.isEmpty() && subres.get(subres.size() - 1).departureAirport().equalsIgnoreCase(depAirport)) {
+            res.add(new ArrayList(subres));
+            return;
+        }
+        // if subres length equal to max layover + 1 (the length should be 3 because the departure airport + max 2 stops)
+        if (subres.size() == Saps.MAX_LAYOVER+1) {
+            return;
+        }
+        // pass arriving to server to get the list of flights arriving at an airport
+        Flights resFlights = getFromMapOrServer(arrAirport, arrTime, "arriving");
+        // if there's at least 1 element in subres
+        if (subres.size() >= 1) {
+            // get last flight to calculate layover time
+            Flight lastFlight = subres.get(subres.size() - 1);
+            // check if previous day is still in valid layover time range
+            // max layover time is 2hr so previous day to 02:00 is still in the range
+            LocalDateTime depTime = lastFlight.departureTime();
+            int hr = depTime.getHour();
+            String preDay=depTime.minusDays(1).format(formatter);
+            if(hr <= 2) {
+                Flights preDayFlights = getFromMapOrServer(lastFlight.departureAirport(), preDay, "arriving");
+                resFlights.addAll(preDayFlights);
+            }
+        }
+
+        for (Flight f : resFlights) {
+            if (isSeatAvailable(f, seatClass)) {
+                // if there's at least 1 element in subres, check if layover time is invalid and then skip
+                if (subres.size() >= 1) {
+                    if (!isValidLayover(f.arrivalTime(), subres.get(subres.size() - 1).departureTime())) continue;
+                }
+                // add element (flight) if it's valid
+                subres.add(f);
+                // do recursion
+                arrTimeFlightDFS(res, subres, depAirport, f.departureTime().format(formatter), f.departureAirport(), seatClass);
+                // remove the last element we add and then continue to do the iteration
+                subres.remove(subres.size()-1);
+            }
+        }
+    }
+
+    /**
+     * Storing airport, date and search type to reduce searching time
+     */
+    public Flights getFromMapOrServer(String airport, String date, String searchType) {
+        String key = airport + date + searchType;
+        Flights res = new Flights();
+        if (flightsMap.containsKey(key)) {
+            res.addAll(flightsMap.get(key));
+            return res;
+        }
+        Flights flights = ServerInterface.INSTANCE.getFlights(teamName, airport, date, searchType);
+        flightsMap.put(key, flights);
+        res.addAll(flights);
+        return res;
+    }
 
     /**
      * Check for available seats given a flight and the seat class
