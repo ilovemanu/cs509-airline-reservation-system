@@ -21,8 +21,8 @@ import utils.QueryFactory;
  * This class provides an interface to the CS509 server. It provides sample methods to perform
  * HTTP GET and HTTP POSTS
  *   
- * @author blake and alex
- * @version 1 2019-03-15
+ * @author blake, alex and liz
+ * @version 1.1 2019-04-11
  * @since 2016-02-24
  *
  */
@@ -158,10 +158,11 @@ public enum ServerInterface {
 	 *
 	 * @param teamName is teamName
 	 * @param departureCode is the code for departure airport
+	 * @param searchType is the searching type for departure date and arrival date searching
 	 * @return
 	 */
 	public Flights getFlights (String teamName, String departureCode,
-							   String departureTime) {
+							   String departureTime, String searchType) {
 
 		URL url;
 		HttpURLConnection connection;
@@ -178,7 +179,7 @@ public enum ServerInterface {
 			 * QueryFactory provides the parameter annotations for the HTTP GET query string
 			 */
 			url = new URL(mUrlBase
-					+ QueryFactory.getFlights(teamName, departureCode, departureTime));
+					+ QueryFactory.getFlights(teamName, departureCode, departureTime, searchType));
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("GET");
 			connection.setRequestProperty("User-Agent", teamName);

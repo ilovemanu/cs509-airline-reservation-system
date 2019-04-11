@@ -4,8 +4,8 @@
 package utils;
 
 /**
- * @author blake and alex
- * @version 1 2019-03-15
+ * @author blake, alex and liz
+ * @version 1.1 2019-04-11
  * @since 2016-02-24
  *
  */
@@ -37,13 +37,15 @@ public class QueryFactory {
 	 * @param teamName
 	 * @param departureCode
 	 * @param departureTime
+	 * @param searchType
 	 * @return the query String which can be appended to URL to form HTTP GET request
 	 */
 	public static String getFlights(String teamName,
 									String departureCode,
-									String departureTime) {
-		return String.format("?team=%s&action=list&list_type=departing&airport=%s&day=%s",
-				teamName, departureCode, departureTime);
+									String departureTime,
+									String searchType) {
+		return String.format("?team=%s&action=list&list_type=%s&airport=%s&day=%s",
+				teamName, searchType, departureCode, departureTime);
 	}
 
 	/**
