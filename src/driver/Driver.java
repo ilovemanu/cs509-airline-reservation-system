@@ -32,44 +32,47 @@ public class Driver {
 	 * @param args is the arguments passed to java vm in format of "CS509.sample teamName" where teamName is a valid team
 	 */
 	public static void main(String[] args) {
-		// check invalid arguments
-		if (args.length <4) {
-			System.err.println("Check arguments!");
-			System.exit(-1);
-			return;
-		}
+		UserInterface userinterface = new UserInterface();
+		userinterface.mainMenu();
 
-		String departureCode = args[0].toUpperCase();
-		String departureTime = args[1];
-		String arrivalCode = args[2].toUpperCase();
-		String seatClass = args[3];
-		String sortParam = ""; // default sort by travelTime
-		if (args.length == 5) { sortParam = args[4]; }// options: depTime, arrTime, travelTime, totalPrice
-
-		// Try to get a list of all matching flights
-		// with defined departure and arrival and seatClass and sort parameter
-		// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach totalPrice]
-		FlightController controller = new FlightController();
-		ArrayList<ArrayList<Flight>> flights = controller.searchFlight(departureCode,departureTime,arrivalCode,seatClass);
-
-		// apply sorter
-		controller.sortByParam(sortParam, flights, seatClass);
-
-		if (flights.size() == 0) {
-			System.out.println("No " + seatClass + " flights available.");
-		} else {
-			for (ArrayList<Flight> flightList : flights) {
-				ArrayList<String> info = FlightController.getInfo(flightList,seatClass);
-				System.out.println("Departure:"+info.get(0)+
-						           ", Arrival:"+info.get(1)+
-						           ", Duration:"+info.get(2)+
-						           ", Price:"+"$"+info.get(3));
-				for (Flight f : flightList) {
-					System.out.println(f.toString());
-				}
-				System.out.println();
-			}
-		}
+//		// check invalid arguments
+//		if (args.length <4) {
+//			System.err.println("Check arguments!");
+//			System.exit(-1);
+//			return;
+//		}
+//
+//		String departureCode = args[0].toUpperCase();
+//		String departureTime = args[1];
+//		String arrivalCode = args[2].toUpperCase();
+//		String seatClass = args[3];
+//		String sortParam = ""; // default sort by travelTime
+//		if (args.length == 5) { sortParam = args[4]; }// options: depTime, arrTime, travelTime, totalPrice
+//
+//		// Try to get a list of all matching flights
+//		// with defined departure and arrival and seatClass and sort parameter
+//		// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach totalPrice]
+//		FlightController controller = new FlightController();
+//		ArrayList<ArrayList<Flight>> flights = controller.searchFlight(departureCode,departureTime,arrivalCode,seatClass);
+//
+//		// apply sorter
+//		controller.sortByParam(sortParam, flights, seatClass);
+//
+//		if (flights.size() == 0) {
+//			System.out.println("No " + seatClass + " flights available.");
+//		} else {
+//			for (ArrayList<Flight> flightList : flights) {
+//				ArrayList<String> info = FlightController.getInfo(flightList,seatClass);
+//				System.out.println("Departure:"+info.get(0)+
+//						           ", Arrival:"+info.get(1)+
+//						           ", Duration:"+info.get(2)+
+//						           ", Price:"+"$"+info.get(3));
+//				for (Flight f : flightList) {
+//					System.out.println(f.toString());
+//				}
+//				System.out.println();
+//			}
+//		}
 
 
 //		// Try to get a list of airports
