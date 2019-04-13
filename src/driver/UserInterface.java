@@ -23,6 +23,7 @@ public class UserInterface {
      * @param returnDate is the string value for return date
      * @param flightNumber is the int value for reserving flights
      * @param returnFlightNumber is the int value for reserving return flights
+     * @param filterType is the int value for filters
      */
     String depAirport;
     String arrAirport;
@@ -34,9 +35,13 @@ public class UserInterface {
     String returnDate;
     int flightNumber;
     int returnFlightNumber;
+    int filterType;
 
-    ArrayList<ArrayList<Flight>> flight;
-    ArrayList<ArrayList<Flight>> returnFlight;
+    // flight seperate to res and view because when filter flight list, the flight reserve number will change
+    ArrayList<ArrayList<Flight>> resFlight;
+    ArrayList<ArrayList<Flight>> resReturnFlight;
+    ArrayList<ArrayList<Flight>> viewFlight;
+    ArrayList<ArrayList<Flight>> viewReturnFlight;
     FlightController controller;
 
     /**
@@ -53,6 +58,11 @@ public class UserInterface {
         tripType = "one-way";
         sortParam = "travelTime";
         returnDate = "";
+        filterType = 3;
+        resFlight = new ArrayList();
+        resReturnFlight = new ArrayList();
+        viewFlight = new ArrayList();
+        viewReturnFlight = new ArrayList();
     }
 
     /**
@@ -66,28 +76,38 @@ public class UserInterface {
         System.out.println("5. Seating Class");
         System.out.println("6. Trip Type");
         System.out.println("7. Return Date");
-        System.out.println("8. Sort Parameter");
-        System.out.println("9. Search Flight");
-        System.out.println("10. Reserve Flight");
+        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime)");
+        System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
+        System.out.println("10. Search Flight");
+        System.out.println("11. Reserve Flight");
+        System.out.println("12. Show Flight List Again");
 
         // Use Scanner to read user input
         Scanner scan = new Scanner(System.in);
         if(scan.hasNext()) {
-            int selectMenu = scan.nextInt();
-            readParameter(selectMenu);
+            try {
+                int selectMenu = scan.nextInt();
+                readUserInput(selectMenu);
+            // handle user not typing integer when selecting
+            } catch (Exception e){
+                System.out.println("Please input integer only");
+                mainMenu();
+            }
+
         }
     }
 
     /**
      * read user input
      */
-    public void readParameter(int selectMenu) {
+    public void readUserInput(int selectMenu) {
         Scanner scan = new Scanner(System.in);
         String param;
 
-        if(selectMenu!=9 && selectMenu!=10 && scan.hasNext()) {
+        // if user type 10, 11, 12 then assign empty string
+        if(selectMenu<10 && scan.hasNext()) {
             param = scan.next();
-        } else param="";
+        } else param = "";
 
         switch(selectMenu) {
             case 1:
@@ -127,6 +147,10 @@ public class UserInterface {
                 System.out.println(sortParam);
                 break;
             case 9:
+                filterType = Integer.valueOf(param);
+                System.out.println(filterType);
+                break;
+            case 10:
                 // if user search again, reset flight number and return flight number
                 flightNumber = -1;
                 returnFlightNumber = -1;
@@ -141,32 +165,40 @@ public class UserInterface {
                 } else {
                     // if user search by departure time
                     if (!depTime.isEmpty()) {
-                        flight = controller.searchDepTimeFlight(depAirport, depTime, arrAirport, seatClass);
+                        resFlight = controller.searchDepTimeFlight(depAirport, depTime, arrAirport, seatClass);
                     // if user search by arrival time
                     } else {
-                        flight = controller.searchArrTimeFlight(depAirport, arrTime, arrAirport, seatClass);
+                        resFlight = controller.searchArrTimeFlight(depAirport, arrTime, arrAirport, seatClass);
                     }
-                    controller.sortByParam(sortParam, flight, seatClass);
-                    printFlightList(flight);
+                    controller.sortByParam(sortParam, resFlight, seatClass);
+                    printFlightList(resFlight, viewFlight);
                 }
 
                 // if trip type is round-trip, search return flight
                 if (tripType.equalsIgnoreCase("round-trip")){
                     // if user search by departure time
                     if (!depTime.isEmpty()) {
-                        returnFlight = controller.searchDepTimeFlight(arrAirport, returnDate, depAirport, seatClass);
+                        resReturnFlight = controller.searchDepTimeFlight(arrAirport, returnDate, depAirport, seatClass);
                     // if user search by arrival time
                     } else {
-                        returnFlight = controller.searchArrTimeFlight(arrAirport, returnDate, depAirport, seatClass);
+                        resReturnFlight = controller.searchArrTimeFlight(arrAirport, returnDate, depAirport, seatClass);
                     }
-                    controller.sortByParam(sortParam, returnFlight, seatClass);
-                    System.out.println("Return Flight List:");
-                    printFlightList(returnFlight);
+                    controller.sortByParam(sortParam, resReturnFlight, seatClass);
+                    System.out.println("Return Flight List");
+                    printFlightList(resReturnFlight, viewReturnFlight);
                 }
                 break;
-//            TODO: Reserve flight
-//            case 10:
-//                break;
+            case 11:
+                // TODO: Reserve flight (CAUTION: reserve flight from viewFlight, NOT resFlight)
+                break;
+            case 12:
+                // show flight list again
+                printFlightList(resFlight, viewFlight);
+                if(resReturnFlight.size()>0){
+                    System.out.println("Return Flight List:");
+                    printFlightList(resReturnFlight, viewReturnFlight);
+                }
+                break;
         }
         mainMenu();
     }
@@ -174,14 +206,22 @@ public class UserInterface {
     /**
      * Print flight searching result
      */
-    public void printFlightList(ArrayList<ArrayList<Flight>> flight) {
+    public void printFlightList(ArrayList<ArrayList<Flight>> flight, ArrayList<ArrayList<Flight>> viewFlight) {
+        // clear the previous flight list because we have to show correct filter
+        viewFlight.clear();
         if (flight.size() == 0) {
             System.out.println("No " + seatClass + " flights available.");
         } else {
             for (int i=0; i<flight.size(); i++) {
                 ArrayList<Flight> flightList = flight.get(i);
+                int n = flightList.size();
+                // if filter = non stop but flight list not just have one element then skip
+                // if filter = one stop but flight list not just have two elements then skip
+                // if filter = two stop but flight list not just have three elements then skip
+                if((filterType==0 && n!=1) || (filterType==1 && n!=2) || (filterType==2 && n!=3)) continue;
+                viewFlight.add(flightList);
                 ArrayList<String> info = FlightController.getInfo(flightList, seatClass);
-                System.out.println("Flight Reserve Number: " + i);
+                System.out.println("Flight Reserve Number: " + (viewFlight.size()-1));
                 System.out.println("Departure:"+info.get(0)+
                         ", Arrival:"+info.get(1)+
                         ", Duration:"+info.get(2)+

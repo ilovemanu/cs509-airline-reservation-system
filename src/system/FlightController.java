@@ -92,6 +92,7 @@ public class FlightController {
                     if (!isValidLayover(subres.get(subres.size() - 1).arrivalTime(), f.departureTime())) continue;
                 }
                 // add element (flight) if it's valid
+                if(!isValidTime(f)) continue;
                 subres.add(f);
                 // do recursion
                 depTimeFlightDFS(res, subres, f.arrivalAirport(), f.arrivalTime().format(formatter), arrAirport, seatClass);
@@ -159,6 +160,7 @@ public class FlightController {
                     if (!isValidLayover(f.arrivalTime(), subres.get(subres.size() - 1).departureTime())) continue;
                 }
                 // add element (flight) if it's valid
+                if(!isValidTime(f)) continue;
                 subres.add(f);
                 // do recursion
                 arrTimeFlightDFS(res, subres, depAirport, f.departureTime().format(formatter), f.departureAirport(), seatClass);
@@ -226,6 +228,17 @@ public class FlightController {
         return layOver >= Saps.MIN_LAYOVER_TIME && layOver <= Saps.MAX_LAYOVER_TIME;
     }
 
+    /**
+     * Hard code validation time to handle edge case:
+     * Search arrival time on 2019_05_04, and search departure time on 2019_05_18
+     */
+    public boolean isValidTime(Flight flight){
+        return flight.departureTime().isAfter(LocalDateTime.of(Saps.DEFAULT_YEAR, Saps.DEFAULT_MONTH, Saps.MIN_DATE,Saps.MIN_HOUR, Saps.MIN_MINUTE)) &&
+               flight.departureTime().isBefore(LocalDateTime.of(Saps.DEFAULT_YEAR, Saps.DEFAULT_MONTH, Saps.MAX_DATE, Saps.MAX_HOUR, Saps.MAX_MINUTE)) &&
+               flight.arrivalTime().isAfter(LocalDateTime.of(Saps.DEFAULT_YEAR, Saps.DEFAULT_MONTH, Saps.MIN_DATE,Saps.MIN_HOUR, Saps.MIN_MINUTE)) &&
+               flight.arrivalTime().isBefore(LocalDateTime.of(Saps.DEFAULT_YEAR, Saps.DEFAULT_MONTH, Saps.MAX_DATE, Saps.MAX_HOUR, Saps.MAX_MINUTE));
+    }
+
 //    /**
 //     * Check the validity of seat and layover constraints
 //     * combine isSeatAvailable and isValidLayover
@@ -275,7 +288,7 @@ public class FlightController {
                 // "$1,000.8"
                 totalPrice += Double.valueOf(f.coachPrice().substring(1).replaceAll(",", ""));
             } else {
-                totalPrice += Double.valueOf(f.firstClassPrice().substring(1).replaceAll(",", ""));
+                totalPrice += Double.valueOf(f.firstClassPrice().substring(1).replaceAll(",",""));
             }
         }
 

@@ -74,7 +74,7 @@ public class Driver {
 		}
 
 //			 test reserve: reserve the first flight/flights on the returned list.
-//			ArrayList<Flight> selected = flights.get(0);
+//			ArrayList<Flight> selected = flights.get(2);
 //			controller.reserveFlight(selected, seatClass);
 			// TODO: implement a confirm function for reservation summary
 		}
@@ -107,7 +107,7 @@ public class Driver {
 //		Collections.sort(flights);
 //		for (Flight flight : flights) {
 //			System.out.println(flight.toString());
-//		}
+//		}z
 
 	}
 }
