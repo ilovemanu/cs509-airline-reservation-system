@@ -17,6 +17,8 @@ import org.xml.sax.SAXException;
 
 import flight.Flight;
 import flight.Flights;
+import java.time.LocalDateTime;
+import utils.Saps;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -115,7 +117,6 @@ public class DaoFlight {
         // Get formatted GMT time from string
         departureTimeString = getCharacterDataFromElement(elementDepartureTime);
         departureTime = LocalDateTime.parse(departureTimeString, formatter);
-
 
         /*
          * <arrival></arrival>
