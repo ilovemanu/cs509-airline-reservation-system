@@ -425,12 +425,12 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
      * @return false if null or exceeds limits, else assume valid and return true
      */
     public boolean isValidTime (LocalDateTime time) {
-        if ((time == null)
-                || time.getYear() != Saps.DEFAULT_YEAR
-                || time.getMonthValue() != Saps.DEFAULT_MONTH
-                || time.getDayOfMonth() > Saps.MAX_DATE
-                || time.getDayOfMonth() < Saps.MIN_DATE)
-            return false;
+//        if ((time == null)
+//                || time.getYear() != Saps.DEFAULT_YEAR
+//                || time.getMonthValue() != Saps.DEFAULT_MONTH
+//                || time.getDayOfMonth() > Saps.MAX_DATE
+//                || time.getDayOfMonth() < Saps.MIN_DATE)
+//            return false;
         return true;
     }
 
