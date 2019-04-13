@@ -272,9 +272,10 @@ public class FlightController {
 
         for (Flight f : flightList) {
             if (seatClass.equalsIgnoreCase("coach")) {
-                totalPrice += Double.valueOf(f.coachPrice().substring(1));
+                // "$1,000.8"
+                totalPrice += Double.valueOf(f.coachPrice().substring(1).replaceAll(",", ""));
             } else {
-                totalPrice += Double.valueOf(f.firstClassPrice().substring(1));
+                totalPrice += Double.valueOf(f.firstClassPrice().substring(1).replaceAll(",", ""));
             }
         }
 
@@ -320,6 +321,58 @@ public class FlightController {
         }
         return searchResult;
     }
+
+    public void reserveFlight(ArrayList<Flight> flightList, String seatClass) {
+        boolean isLocked = false;
+        boolean isReserved = false;
+        boolean isUnlocked = true;
+        String xmlFlights;
+
+        // lock server
+        isLocked = ServerInterface.INSTANCE.lock(teamName);
+
+        // if server locked
+        // update server
+        if (isLocked) {
+            isUnlocked = false;
+            xmlFlights = getXML(flightList, seatClass);
+            isReserved = ServerInterface.INSTANCE.reserveSeat(teamName, xmlFlights);
+
+            // if reservation is successful
+            // unlock server
+            if (isReserved) {
+                isUnlocked = ServerInterface.INSTANCE.unlock(teamName);
+            }
+            // TODO: if isLocked is not successful
+            // TODO: if isReserved is not successful
+        }
+    }
+
+    public String getXML(ArrayList<Flight> flightList, String seatClass) {
+
+//      <Flights>
+//          <Flight number=DDDDD seating=SEAT_TYPE/>
+//	        <Flight number=DDDDD seating=SEAT_TYPE/>
+//      </Flights>
+        String head = "<Flights>";
+        String end = "</Flights>";
+        String middle = "";
+        String SEAT_TYPE = "";
+
+        if(seatClass.equalsIgnoreCase("coach")) {
+            SEAT_TYPE = "Coach";
+        } else if (seatClass.equalsIgnoreCase("firstClass")) {
+            SEAT_TYPE = "FirstClass";
+        }
+
+        for(Flight f:flightList){
+            String number = f.number();
+            middle += "<Flight number=\"" + number + "\" seating=\"" + SEAT_TYPE + "\"/>";
+        }
+        String res = head + middle + end;
+        return res;
+    }
+
 
 
     /**

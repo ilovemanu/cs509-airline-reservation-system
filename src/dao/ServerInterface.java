@@ -321,4 +321,65 @@ public enum ServerInterface {
 		}
 		return true;
 	}
+
+	/**
+	 * Reserve seat using flight number and seat type
+	 * @param teamName
+	 * @param xmlFlights is the xml containing user defined flight number and seat type
+	 * @return true if the server was successfully updated
+	 */
+	public boolean reserveSeat (String teamName, String xmlFlights) {
+
+		URL url;
+		HttpURLConnection connection;
+
+		try {
+
+			/**
+			 * Create an HTTP connection to the server for a POST
+			 */
+			url = new URL(mUrlBase);
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("User-Agent", teamName);
+
+			String params = QueryFactory.reserve(teamName);
+
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+
+			DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
+			writer.writeBytes(params + xmlFlights);
+			writer.flush();
+			writer.close();
+
+			/**
+			 * If response code of SUCCESS read the XML string returned
+			 * line by line to build the full return string
+			 */
+			int responseCode = connection.getResponseCode();
+			System.out.println("\nSending 'POST' to buy ticket");
+			System.out.println(("\nResponse Code : " + responseCode));
+
+			// check if responseCode is between 200 and 300
+			// if true, reservation is successful
+			if (responseCode >= HttpURLConnection.HTTP_OK
+				&& responseCode < 300) {
+
+				System.out.println("Reservation is successful!");
+			}
+			// TODO: if code does not look good (ie. 304, 400), return false
+
+		}
+		catch (IOException ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -49,6 +49,16 @@ public class QueryFactory {
 	}
 
 	/**
+	 * Write reservation updates to the server
+	 *
+	 * @param teamName is the name of the team to acquire the lock
+	 * @return the String written to HTTP POST to reserve seats
+	 */
+	public static String reserve(String teamName) {
+		return "team=" + teamName + "&action=buyTickets&flightData=";
+	}
+
+	/**
 	 * Lock the server database so updates can be written
 	 *
 	 * @param teamName is the name of the team to acquire the lock
@@ -68,6 +78,6 @@ public class QueryFactory {
 	public static String unlock (String teamName) {
 		return "team=" + teamName + "&action=unlockDB";
 	}
-	
+
 
 }
