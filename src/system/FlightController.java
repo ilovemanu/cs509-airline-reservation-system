@@ -18,8 +18,8 @@ import java.util.*;
  * This class is the interface between user and server.
  * It holds logic needed to match flights using user inputs.
  *
- * @author alex and liz
- * @version 1.3 2019-04-11
+ * @author alex, liz and kathy
+ * @version 1.4 2019-04-13
  * @since 2019-04-01
  */
 
