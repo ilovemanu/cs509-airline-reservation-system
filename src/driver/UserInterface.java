@@ -2,12 +2,13 @@ package driver;
 import java.util.*;
 import flight.*;
 import system.FlightController;
+import utils.Saps;
 
 /**
  * This class holds user input for searching flight
  *
  * @author liz and alex
- * @version 1.0 2019-04-10
+ * @version 1.1 2019-04-13
  * @since 2019-04-10
  */
 
@@ -37,7 +38,7 @@ public class UserInterface {
     int returnFlightNumber;
     int filterType;
 
-    // flight seperate to res and view because when filter flight list, the flight reserve number will change
+    // flight seperate to res and view because when filter flight list, the flight reserve number (index) will change
     ArrayList<ArrayList<Flight>> resFlight;
     ArrayList<ArrayList<Flight>> resReturnFlight;
     ArrayList<ArrayList<Flight>> viewFlight;
@@ -73,14 +74,15 @@ public class UserInterface {
         System.out.println("2. Arrival Airport");
         System.out.println("3. Departure Date");
         System.out.println("4. Arrival Date");
-        System.out.println("5. Seating Class");
-        System.out.println("6. Trip Type");
+        System.out.println("5. Seating Class (Coach, FirstClass)");
+        System.out.println("6. Trip Type (one-way, round-trip)");
         System.out.println("7. Return Date");
         System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime)");
         System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
-        System.out.println("10. Search Flight");
-        System.out.println("11. Reserve Flight");
-        System.out.println("12. Show Flight List Again");
+        System.out.println("10, Select Flight (0. Select Departing Flight 1. Select Return Flight (Only for round-trip))");
+        System.out.println("11. Search Flight");
+        System.out.println("12. Reserve Flight");
+        System.out.println("13. Show Flight List Again");
 
         // Use Scanner to read user input
         Scanner scan = new Scanner(System.in);
@@ -104,8 +106,8 @@ public class UserInterface {
         Scanner scan = new Scanner(System.in);
         String param;
 
-        // if user type 10, 11, 12 then assign empty string
-        if(selectMenu<10 && scan.hasNext()) {
+        // if user type 11, 12, 13 then assign empty string
+        if(selectMenu<11 && scan.hasNext()) {
             param = scan.next();
         } else param = "";
 
@@ -151,6 +153,25 @@ public class UserInterface {
                 System.out.println(filterType);
                 break;
             case 10:
+                // depOrReturn is for user to input departing's or returning's flight reserve number
+                int depOrReturn = Integer.valueOf(param);
+                switch (depOrReturn){
+                    case 0:
+                        flightNumber = scan.nextInt();
+                        buildViewFlightList();
+                        // if user input departing flight reserve number and previously select round-trip
+                        // then print return flight list for them to choose return flight
+                        if (tripType.equalsIgnoreCase("round-trip")) {
+                            printFlightList(resReturnFlight, viewReturnFlight, "Returning");
+                        }
+                        break;
+                    case 1:
+                        returnFlightNumber = scan.nextInt();
+                        break;
+                }
+                break;
+            case 11:
+                // default value
                 // if user search again, reset flight number and return flight number
                 flightNumber = -1;
                 returnFlightNumber = -1;
@@ -171,7 +192,7 @@ public class UserInterface {
                         resFlight = controller.searchArrTimeFlight(depAirport, arrTime, arrAirport, seatClass);
                     }
                     controller.sortByParam(sortParam, resFlight, seatClass);
-                    printFlightList(resFlight, viewFlight);
+                    printFlightList(resFlight, viewFlight, "Departing");
                 }
 
                 // if trip type is round-trip, search return flight
@@ -185,18 +206,21 @@ public class UserInterface {
                     }
                     controller.sortByParam(sortParam, resReturnFlight, seatClass);
                     System.out.println("Return Flight List");
-                    printFlightList(resReturnFlight, viewReturnFlight);
+                    printFlightList(resReturnFlight, viewReturnFlight, "Returning");
                 }
                 break;
-            case 11:
-                // TODO: Reserve flight (CAUTION: reserve flight from viewFlight, NOT resFlight)
-                break;
             case 12:
+                controller.reserveFlight(viewFlight.get(flightNumber), seatClass);
+                if(tripType.equalsIgnoreCase("round-trip")){
+                    controller.reserveFlight(viewReturnFlight.get(returnFlightNumber), seatClass);
+                }
+                break;
+            case 13:
                 // show flight list again
-                printFlightList(resFlight, viewFlight);
+                printFlightList(resFlight, viewFlight, "Departing");
                 if(resReturnFlight.size()>0){
                     System.out.println("Return Flight List:");
-                    printFlightList(resReturnFlight, viewReturnFlight);
+                    printFlightList(resReturnFlight, viewReturnFlight, "Returning");
                 }
                 break;
         }
@@ -206,22 +230,16 @@ public class UserInterface {
     /**
      * Print flight searching result
      */
-    public void printFlightList(ArrayList<ArrayList<Flight>> flight, ArrayList<ArrayList<Flight>> viewFlight) {
-        // clear the previous flight list because we have to show correct filter
-        viewFlight.clear();
+    public void printFlightList(ArrayList<ArrayList<Flight>> flight, ArrayList<ArrayList<Flight>> viewFlight, String departOrReturn) {
+        buildViewFlightList();
         if (flight.size() == 0) {
-            System.out.println("No " + seatClass + " flights available.");
+            System.out.println("No " + departOrReturn + " " + seatClass + " flights available.");
+            return;
         } else {
             for (int i=0; i<flight.size(); i++) {
                 ArrayList<Flight> flightList = flight.get(i);
-                int n = flightList.size();
-                // if filter = non stop but flight list not just have one element then skip
-                // if filter = one stop but flight list not just have two elements then skip
-                // if filter = two stop but flight list not just have three elements then skip
-                if((filterType==0 && n!=1) || (filterType==1 && n!=2) || (filterType==2 && n!=3)) continue;
-                viewFlight.add(flightList);
                 ArrayList<String> info = FlightController.getInfo(flightList, seatClass);
-                System.out.println("Flight Reserve Number: " + (viewFlight.size()-1));
+                System.out.println("Flight Reserve Number: " + i);
                 System.out.println("Departure:"+info.get(0)+
                         ", Arrival:"+info.get(1)+
                         ", Duration:"+info.get(2)+
@@ -232,6 +250,47 @@ public class UserInterface {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * Build user view's flight
+     */
+    public void buildViewFlightList(){
+        // clear the previous flight list because we have to show correct filter, valid return flight
+        viewFlight.clear();
+        viewReturnFlight.clear();
+        if(resFlight.size()==0) {
+            System.out.println("No resFlight has been built");
+            return;
+        }
+        // if user select one-way
+        for(int i=0;i<resFlight.size();i++){
+            ArrayList<Flight> flightList = resFlight.get(i);
+            int n = flightList.size();
+            // if filter = non stop but flight list not having 1 element only then skip
+            // if filter = one stop but flight list not having 2 elements only then skip
+            // if filter = two stop but flight list not having 3 elements only then skip
+            if((filterType==0 && n!=1) || (filterType==1 && n!=2) || (filterType==2 && n!=3)) continue;
+            viewFlight.add(flightList);
+        }
+        if(!tripType.equalsIgnoreCase("round-trip") || resReturnFlight.size()==0) return;
+        // if user select round-trip
+        for(int i=0; i<resReturnFlight.size(); i++){
+            ArrayList<Flight> flightList = resReturnFlight.get(i);
+            int n = flightList.size();
+            if((filterType==0 && n!=1) || (filterType==1 && n!=2) || (filterType==2 && n!=3)) continue;
+            // if user select departing flight (default flightNumber is -1 which means not select)
+            if(flightNumber!=-1){
+                // viewFlight.get(flightNumber) means get the flight reserve number
+                // .get(viewFlight.get(flightNumber).size()-1) means get the last element
+                Flight departing = viewFlight.get(flightNumber).get(viewFlight.get(flightNumber).size()-1);
+                Flight returning = flightList.get(0);
+                // if departing flight + min layover time is already pass the returning flight time (which means we cannot catch up) then skip
+                if(departing.arrivalTime().plusMinutes(Saps.MIN_LAYOVER_TIME).isAfter(returning.departureTime())) continue;
+            }
+            viewReturnFlight.add(flightList);
+        }
+
     }
 
 }

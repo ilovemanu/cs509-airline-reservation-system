@@ -2,15 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7b74de5a-1b08-4a99-86bf-d1a695cc23a0" name="Default Changelist" comment="add arrival and seat class option for non-stop flight search.">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/driver/UserInterface.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/dao/DaoFlight.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/dao/DaoFlight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/flight/Flight.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/flight/Flight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dao/DaoFlight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/DaoFlight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/driver/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/Driver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/driver/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/UserInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/flight/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/flight/Flight.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/FlightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/FlightController.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
@@ -34,13 +27,22 @@
     <expand />
     <select />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-203395270">
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="19" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/driver/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="96" column="41" selection-start-line="96" selection-start-column="41" selection-end-line="96" selection-end-column="41" />
+            <state relative-caret-position="705">
+              <caret line="47" column="45" lean-forward="true" selection-start-line="47" selection-start-column="45" selection-end-line="47" selection-end-column="45" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -49,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4530">
-              <caret line="335" column="5" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
+            <state relative-caret-position="315">
+              <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -64,17 +66,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/driver/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="140" column="19" lean-forward="true" selection-start-line="140" selection-start-column="19" selection-end-line="140" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="9" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+            <state relative-caret-position="545">
+              <caret line="287" column="99" selection-start-line="287" selection-start-column="99" selection-end-line="287" selection-end-column="99" />
             </state>
           </provider>
         </entry>
@@ -82,11 +75,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/QueryFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="56" column="51" selection-start-line="56" selection-start-column="51" selection-end-line="56" selection-end-column="51" />
-              <folding>
-                <element signature="e#1782#1783#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="465">
+              <caret line="66" selection-start-line="66" selection-end-line="66" />
             </state>
           </provider>
         </entry>
@@ -94,8 +84,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dao/ServerInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="371" selection-start-line="371" selection-end-line="371" />
+            <state relative-caret-position="42">
+              <caret line="330" column="30" selection-start-line="330" selection-start-column="19" selection-end-line="330" selection-end-column="30" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -107,7 +97,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/flight/Flight.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2942">
+            <state relative-caret-position="887">
               <caret line="367" column="5" selection-start-line="367" selection-start-column="5" selection-end-line="367" selection-end-column="5" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -144,6 +134,7 @@
       <find>&amp;action=buyTickets&amp;flightData=</find>
       <find>url</find>
       <find>xmlFlights</find>
+      <find>printFlightList</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -162,9 +153,10 @@
         <option value="$PROJECT_DIR$/src/airplane/Airplane.java" />
         <option value="$PROJECT_DIR$/src/utils/QueryFactory.java" />
         <option value="$PROJECT_DIR$/src/dao/ServerInterface.java" />
-        <option value="$PROJECT_DIR$/src/system/FlightController.java" />
         <option value="$PROJECT_DIR$/src/driver/Driver.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/driver/UserInterface.java" />
+        <option value="$PROJECT_DIR$/src/system/FlightController.java" />
       </list>
     </option>
   </component>
@@ -180,19 +172,30 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
-              <item name="CS509-GompeiSquad-ARS" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS509-GompeiSquad-ARS" type="462c0819:PsiDirectoryNode" />
+              <item name="cs509-gompeisquad-ars" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs509-gompeisquad-ars" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cs509-gompeisquad-ars" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs509-gompeisquad-ars" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cs509-gompeisquad-ars" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cs509-gompeisquad-ars" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -309,10 +312,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="143" y="32" width="1190" height="877" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33972126" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13733906" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Learn" order="3" />
@@ -439,9 +442,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="19" column="4" lean-forward="true" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -459,9 +459,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
           <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -469,9 +466,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1095">
           <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -490,9 +484,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="54" column="11" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -507,9 +498,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="18" column="3" selection-start-line="8" selection-end-line="18" selection-end-column="3" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -555,9 +543,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="17" selection-start-line="17" selection-end-line="17" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -584,7 +569,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/flight/Flight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2942">
+        <state relative-caret-position="887">
           <caret line="367" column="5" selection-start-line="367" selection-start-column="5" selection-end-line="367" selection-end-column="5" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -595,35 +580,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/driver/UserInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="140" column="19" lean-forward="true" selection-start-line="140" selection-start-column="19" selection-end-line="140" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4530">
-          <caret line="335" column="5" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="545">
+          <caret line="287" column="99" selection-start-line="287" selection-start-column="99" selection-end-line="287" selection-end-column="99" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/QueryFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="56" column="51" selection-start-line="56" selection-start-column="51" selection-end-line="56" selection-end-column="51" />
-          <folding>
-            <element signature="e#1782#1783#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="465">
+          <caret line="66" selection-start-line="66" selection-end-line="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dao/ServerInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="371" selection-start-line="371" selection-end-line="371" />
+        <state relative-caret-position="42">
+          <caret line="330" column="30" selection-start-line="330" selection-start-column="19" selection-end-line="330" selection-end-column="30" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
@@ -633,8 +605,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/driver/Driver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="96" column="41" selection-start-line="96" selection-start-column="41" selection-end-line="96" selection-end-column="41" />
+        <state relative-caret-position="705">
+          <caret line="47" column="45" lean-forward="true" selection-start-line="47" selection-start-column="45" selection-end-line="47" selection-end-column="45" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
@@ -646,6 +618,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="1" column="9" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="26" selection-start-line="21" selection-start-column="26" selection-end-line="21" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
