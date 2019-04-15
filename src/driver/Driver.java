@@ -14,9 +14,12 @@ import flight.Flight;
 import flight.Flights;
 import dao.ServerInterface;
 import system.FlightController;
+import airport.AirportZone;
+import java.time.ZoneId;
+import static system.FlightController.getAirportByCode;
 
 /**
- * @author blake, alex and liz
+ * @author blake, alex, liz and Priyanka
  * @since 2016-02-24
  * @version 1.2 2019-04-09
  *
@@ -67,6 +70,15 @@ public class Driver {
 						           ", Duration:"+info.get(2)+"min"+
 						           ", Price:"+"$"+info.get(3));
 				for (Flight f : flightList) {
+
+					String depAirport = f.departureAirport();
+					ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
+					String arrAirport = f.arrivalAirport();
+					ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
+
+					f.departureTime(FlightController.convertGmtToLocalTime(f.departureTime(),depZoneID));
+					f.arrivalTime(FlightController.convertGmtToLocalTime(f.arrivalTime(),arrZoneID));
+
 					System.out.println(f.toString());
 				}
 				System.out.println();
