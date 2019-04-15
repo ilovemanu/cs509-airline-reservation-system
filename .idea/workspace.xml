@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7b74de5a-1b08-4a99-86bf-d1a695cc23a0" name="Default Changelist" comment="add arrival and seat class option for non-stop flight search.">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/bin/driver/UserInterface.class" afterDir="false" />
+    <list default="true" id="7b74de5a-1b08-4a99-86bf-d1a695cc23a0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/dao/DaoFlight.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/dao/DaoFlight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/flight/Flight.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/flight/Flight.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dao/DaoFlight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/dao/DaoFlight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/driver/Driver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/Driver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/driver/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/driver/UserInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/flight/Flight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/flight/Flight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/system/FlightController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/FlightController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/driver/Driver.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/driver/Driver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/system/FlightController.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/system/FlightController.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -39,8 +32,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/driver/Driver.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="115">
-              <caret line="96" column="41" selection-start-line="96" selection-start-column="41" selection-end-line="96" selection-end-column="41" />
+            <state relative-caret-position="453">
+              <caret line="85" column="19" lean-forward="true" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="imports" expanded="true" />
@@ -52,8 +45,38 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4530">
-              <caret line="335" column="5" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
+            <state relative-caret-position="129">
+              <caret line="125" column="7" lean-forward="true" selection-start-line="125" selection-start-column="7" selection-end-line="125" selection-end-column="7" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="9" lean-forward="true" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="50" lean-forward="true" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/dao/DaoFlight.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1800">
+              <caret line="120" column="10" lean-forward="true" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -64,17 +87,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/driver/UserInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="129">
-              <caret line="140" column="19" lean-forward="true" selection-start-line="140" selection-start-column="19" selection-end-line="140" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="9" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+            <state relative-caret-position="-1041">
+              <caret line="142" column="42" lean-forward="true" selection-start-line="142" selection-start-column="42" selection-end-line="142" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -82,7 +96,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/QueryFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
+            <state relative-caret-position="155">
               <caret line="56" column="51" selection-start-line="56" selection-start-column="51" selection-end-line="56" selection-end-column="51" />
               <folding>
                 <element signature="e#1782#1783#0" expanded="true" />
@@ -94,7 +108,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/dao/ServerInterface.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
+            <state relative-caret-position="410">
               <caret line="371" selection-start-line="371" selection-end-line="371" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -162,14 +176,14 @@
         <option value="$PROJECT_DIR$/src/airplane/Airplane.java" />
         <option value="$PROJECT_DIR$/src/utils/QueryFactory.java" />
         <option value="$PROJECT_DIR$/src/dao/ServerInterface.java" />
-        <option value="$PROJECT_DIR$/src/system/FlightController.java" />
-        <option value="$PROJECT_DIR$/src/driver/Driver.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/driver/Driver.java" />
+        <option value="$PROJECT_DIR$/src/system/FlightController.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="143" />
+    <option name="x" value="158" />
     <option name="y" value="23" />
     <option name="width" value="1190" />
     <option name="height" value="877" />
@@ -188,6 +202,22 @@
               <item name="CS509-GompeiSquad-ARS" type="b2602c69:ProjectViewProjectNode" />
               <item name="CS509-GompeiSquad-ARS" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="CS509-GompeiSquad-ARS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CS509-GompeiSquad-ARS" type="462c0819:PsiDirectoryNode" />
+              <item name=".idea" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CS509-GompeiSquad-ARS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CS509-GompeiSquad-ARS" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CS509-GompeiSquad-ARS" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CS509-GompeiSquad-ARS" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="dao" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -204,7 +234,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Background" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -224,7 +254,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="driver.Driver" />
       <module name="CS509-GompeiSquad-ARS" />
-      <option name="PROGRAM_PARAMETERS" value="bos 2019_05_04 cle coach" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -293,11 +322,18 @@
       <option name="project" value="LOCAL" />
       <updated>1554221002195</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="add basic reserve function.&#10;add if/else to separate args and scan ui.">
+      <created>1555167412601</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1555167412601</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="133855000" />
+    <option name="totallyTimeSpent" value="136403000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -309,10 +345,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="143" y="32" width="1190" height="877" extended-state="0" />
+    <frame x="158" y="23" width="1190" height="877" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.33972126" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19076654" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Learn" order="3" />
@@ -322,14 +358,14 @@
       <window_info id="UI Designer" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.35159236" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.35159236" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.25477707" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3299363" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49956024" weight="0.14012739" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49956024" visible="true" weight="0.277707" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50043976" side_tool="true" weight="0.14227642" />
       <window_info anchor="bottom" id="Version Control" order="11" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.32738853" />
@@ -354,7 +390,8 @@
     <MESSAGE value="edited the output" />
     <MESSAGE value="add date search" />
     <MESSAGE value="add arrival and seat class option for non-stop flight search." />
-    <option name="LAST_COMMIT_MESSAGE" value="add arrival and seat class option for non-stop flight search." />
+    <MESSAGE value="add basic reserve function.&#10;add if/else to separate args and scan ui." />
+    <option name="LAST_COMMIT_MESSAGE" value="add basic reserve function.&#10;add if/else to separate args and scan ui." />
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
@@ -513,21 +550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/dao/DaoFlight.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-600">
-          <caret line="132" column="30" selection-start-line="132" selection-start-column="30" selection-end-line="132" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1036" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/airport/Airport.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3930">
@@ -593,36 +615,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/driver/UserInterface.java">
+    <entry file="file://$PROJECT_DIR$/src/driver/Driver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="140" column="19" lean-forward="true" selection-start-line="140" selection-start-column="19" selection-end-line="140" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4530">
-          <caret line="335" column="5" selection-start-line="335" selection-start-column="5" selection-end-line="335" selection-end-column="5" />
+        <state relative-caret-position="453">
+          <caret line="85" column="19" lean-forward="true" selection-start-line="85" selection-start-column="19" selection-end-line="85" selection-end-column="19" />
           <folding>
+            <element signature="n#!!doc" expanded="true" />
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/QueryFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="56" column="51" selection-start-line="56" selection-start-column="51" selection-end-line="56" selection-end-column="51" />
-          <folding>
-            <element signature="e#1782#1783#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/dao/ServerInterface.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
+        <state relative-caret-position="410">
           <caret line="371" selection-start-line="371" selection-end-line="371" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -631,12 +637,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/driver/Driver.java">
+    <entry file="file://$PROJECT_DIR$/src/dao/DaoFlight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="96" column="41" selection-start-line="96" selection-start-column="41" selection-end-line="96" selection-end-column="41" />
+        <state relative-caret-position="1800">
+          <caret line="120" column="10" lean-forward="true" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="10" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/driver/UserInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1041">
+          <caret line="142" column="42" lean-forward="true" selection-start-line="142" selection-start-column="42" selection-end-line="142" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/QueryFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="56" column="51" selection-start-line="56" selection-start-column="51" selection-end-line="56" selection-end-column="51" />
+          <folding>
+            <element signature="e#1782#1783#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/system/FlightController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="129">
+          <caret line="125" column="7" lean-forward="true" selection-start-line="125" selection-start-column="7" selection-end-line="125" selection-end-column="7" />
+          <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
@@ -645,7 +677,14 @@
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
-          <caret line="1" column="9" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+          <caret line="1" column="9" lean-forward="true" selection-start-line="1" selection-start-column="9" selection-end-line="1" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="50" lean-forward="true" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
         </state>
       </provider>
     </entry>
