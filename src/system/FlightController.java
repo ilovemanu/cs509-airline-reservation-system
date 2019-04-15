@@ -3,6 +3,8 @@ package system;
 import airplane.Airplane;
 import airplane.Airplanes;
 import airport.Airport;
+import airport.AirportZone;
+import airport.Airports;
 import dao.ServerInterface;
 import flight.Flight;
 import flight.Flights;
@@ -10,6 +12,8 @@ import utils.Saps;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -18,8 +22,8 @@ import java.util.*;
  * This class is the interface between user and server.
  * It holds logic needed to match flights using user inputs.
  *
- * @author alex, liz and kathy
- * @version 1.4 2019-04-13
+ * @author alex, liz, kathy and Priyanka
+ * @version 1.5 2019-04-15
  * @since 2019-04-01
  */
 
@@ -28,6 +32,7 @@ public class FlightController {
     private static final String teamName = "GompeiSquad";
     private Map<String, Airplane> airplaneMap;
     private Map<String, Flights> flightsMap;
+    private static Airports storeAirports;
     // format the time
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
@@ -35,6 +40,10 @@ public class FlightController {
         // initiate the [model, airplane] hashmap
         setAirplaneMap();
         flightsMap = new HashMap();
+
+        if (storeAirports == null) {
+            getAirports();
+        }
     }
 
 
@@ -280,6 +289,12 @@ public class FlightController {
         ArrayList<String> info = new ArrayList<>();
         LocalDateTime depTime = flightList.get(0).departureTime();
         LocalDateTime arrTime = flightList.get(flightList.size() - 1).arrivalTime();
+
+        String depAirport = flightList.get(0).departureAirport();
+        ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
+        String arrAirport = flightList.get(0).arrivalAirport();
+        ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
+
         long travelTime = Duration.between(depTime, arrTime).toMinutes();
         double totalPrice = 0;
 
@@ -292,8 +307,8 @@ public class FlightController {
             }
         }
 
-        info.add(depTime.toString());
-        info.add(arrTime.toString());
+        info.add(convertGmtToLocalTime(depTime,depZoneID).toString());
+        info.add(convertGmtToLocalTime(arrTime,arrZoneID).toString());
         info.add(String.valueOf(travelTime));
         info.add(String.valueOf(totalPrice));
         return info;
@@ -386,15 +401,48 @@ public class FlightController {
         return res;
     }
 
+    /**
+     * Get the airport by airport code
+     * @param code - airport code
+     * @return Airport object
+     */
+    public static Airport getAirportByCode(String code) {
+        if (storeAirports == null) {
+            return null;
+        }
+        Airport retAirport = null;
+        for (Airport airport : storeAirports) {
+            if (airport.code().equals(code)) {
+                retAirport = airport;
+                break;
+            }
+        }
+        return retAirport;
+    }
 
+    /**
+     * Get airport object
+     * @return airports
+     */
+    public Airports getAirports() {
+            storeAirports = ServerInterface.INSTANCE.getAirports(teamName);
+        return storeAirports;
+    }
 
     /**
      * Convert gmt to airport local time
-     *
-     * @param flights is a list of flights to be converted
+     * @param origTime is a list of flights to be converted
+     * @param zoneID for which time is converted
      * @return airport local times
      */
-//    public void convertLocalTime(){}
+    public static LocalDateTime convertGmtToLocalTime(LocalDateTime origTime, ZoneId zoneID){
 
+        //ZoneId zoneID = AirportZone.getZoneByAirportCode(getAirportByCode(airportCode));
+        ZoneId gmtZone = ZoneId.of("GMT");
 
+        ZonedDateTime gmtTime = ZonedDateTime.of(origTime, gmtZone);
+        LocalDateTime localTime = gmtTime.withZoneSameInstant(zoneID).toLocalDateTime();
+
+        return localTime;
+    }
 }
