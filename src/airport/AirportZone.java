@@ -24,7 +24,7 @@ public class AirportZone {
      * @param airport
      * @return zone ID
      */
-    public static ZoneId getZoneByAirportCode(Airport airport) {
+    public static ZoneId getZoneByAirport(Airport airport) {
         double latitude = airport.latitude();
         double longitude = airport.longitude();
 

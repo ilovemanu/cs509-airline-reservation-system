@@ -16,7 +16,7 @@ import dao.ServerInterface;
 import system.FlightController;
 import airport.AirportZone;
 import java.time.ZoneId;
-import static system.FlightController.getAirportByCode;
+//import static system.FlightController.getAirportByCode;
 
 /**
  * @author blake, alex, liz and Priyanka
@@ -64,20 +64,22 @@ public class Driver {
 			System.out.println("No " + seatClass + " flights available.");
 		} else {
 			for (ArrayList<Flight> flightList : flights) {
-				ArrayList<String> info = FlightController.getInfo(flightList,seatClass);
+				// convertTime on results
+//				controller.convertToLocal(flightList);
+				ArrayList<String> info = controller.getInfo(flightList,seatClass);
 				System.out.println("Departure:"+info.get(0)+
 						           ", Arrival:"+info.get(1)+
 						           ", Duration:"+info.get(2)+"min"+
 						           ", Price:"+"$"+info.get(3));
 				for (Flight f : flightList) {
 
-					String depAirport = f.departureAirport();
-					ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
-					String arrAirport = f.arrivalAirport();
-					ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
-
-					f.departureTime(FlightController.convertGmtToLocalTime(f.departureTime(),depZoneID));
-					f.arrivalTime(FlightController.convertGmtToLocalTime(f.arrivalTime(),arrZoneID));
+//					String depAirport = f.departureAirport();
+//					ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
+//					String arrAirport = f.arrivalAirport();
+//					ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
+//
+//					f.departureTime(FlightController.convertGmtToLocalTime(f.departureTime(),depZoneID));
+//					f.arrivalTime(FlightController.convertGmtToLocalTime(f.arrivalTime(),arrZoneID));
 
 					System.out.println(f.toString());
 				}

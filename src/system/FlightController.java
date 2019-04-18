@@ -9,6 +9,7 @@ import dao.ServerInterface;
 import flight.Flight;
 import flight.Flights;
 import utils.Saps;
+import utils.TimeConverter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ import java.util.*;
  * It holds logic needed to match flights using user inputs.
  *
  * @author alex, liz, kathy and Priyanka
- * @version 1.5 2019-04-15
+ * @version 1.6 2019-04-17
  * @since 2019-04-01
  */
 
@@ -31,19 +32,23 @@ public class FlightController {
 
     private static final String teamName = "GompeiSquad";
     private Map<String, Airplane> airplaneMap;
+    private Map<String, Airport> airportMap;
     private Map<String, Flights> flightsMap;
-    private static Airports storeAirports;
+//    private static Airports storeAirports;
+
     // format the time
     public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
     public FlightController() {
         // initiate the [model, airplane] hashmap
         setAirplaneMap();
+        // initiate the [code, airport] hashmap
+        setAirportMap();
         flightsMap = new HashMap();
 
-        if (storeAirports == null) {
-            getAirports();
-        }
+//        if (storeAirports == null) {
+//            getAirports();
+//        }
     }
 
 
@@ -248,25 +253,10 @@ public class FlightController {
                flight.arrivalTime().isBefore(LocalDateTime.of(Saps.DEFAULT_YEAR, Saps.DEFAULT_MONTH, Saps.MAX_DATE, Saps.MAX_HOUR, Saps.MAX_MINUTE));
     }
 
-//    /**
-//     * Check the validity of seat and layover constraints
-//     * combine isSeatAvailable and isValidLayover
-//     *
-//     * @param flight is the flight/leg to check
-//     * @param seatClass is the string value for seat classes
-//     * @param tArr is the arrival time of the previous leg
-//     * @param tDep is the departure time of the next leg
-//     * @return true if both are true
-//     */
-//    public boolean isValid(Flight flight, String seatClass,
-//                           LocalDateTime tArr, LocalDateTime tDep) {
-//        return isSeatAvailable(flight, seatClass)
-//                && isValidLayover(tArr, tDep);
-//    }
 
 
     /**
-     * Find airplane by airplane model
+     * Find airplane by airplane model from the hashmap
      */
     public void setAirplaneMap() {
         Airplanes allPlanes = ServerInterface.INSTANCE.getAirplanes(teamName);
@@ -286,14 +276,17 @@ public class FlightController {
      * @return [depTime, arrTime, travelTime, totalPrice]
      */
     public static ArrayList<String> getInfo(ArrayList<Flight> flightList, String seatClass) {
+        // initiate a new info array list
         ArrayList<String> info = new ArrayList<>();
+        // get the departure time of the first leg
         LocalDateTime depTime = flightList.get(0).departureTime();
+        // get the arrival time of the last leg
         LocalDateTime arrTime = flightList.get(flightList.size() - 1).arrivalTime();
 
-        String depAirport = flightList.get(0).departureAirport();
-        ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
-        String arrAirport = flightList.get(0).arrivalAirport();
-        ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
+//        String depAirport = flightList.get(0).departureAirport();
+//        ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
+//        String arrAirport = flightList.get(flightList.size() - 1).arrivalAirport(); // final arrival airport
+//        ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
 
         long travelTime = Duration.between(depTime, arrTime).toMinutes();
         double totalPrice = 0;
@@ -307,8 +300,10 @@ public class FlightController {
             }
         }
 
-        info.add(convertGmtToLocalTime(depTime,depZoneID).toString());
-        info.add(convertGmtToLocalTime(arrTime,arrZoneID).toString());
+//        info.add(convertGmtToLocalTime(depTime,depZoneID).toString());
+//        info.add(convertGmtToLocalTime(arrTime,arrZoneID).toString());
+        info.add(depTime.toString());
+        info.add(arrTime.toString());
         info.add(String.valueOf(travelTime));
         info.add(String.valueOf(totalPrice));
         return info;
@@ -402,47 +397,67 @@ public class FlightController {
     }
 
     /**
-     * Get the airport by airport code
-     * @param code - airport code
-     * @return Airport object
+     * Find airport obj by airport code from the hashmap
      */
-    public static Airport getAirportByCode(String code) {
-        if (storeAirports == null) {
-            return null;
+    public void setAirportMap() {
+        Airports allAirports = ServerInterface.INSTANCE.getAirports(teamName);
+        airportMap = new HashMap<>();
+        for (Airport a : allAirports) {
+            String code = a.code();
+            airportMap.put(code, a);
         }
-        Airport retAirport = null;
-        for (Airport airport : storeAirports) {
-            if (airport.code().equals(code)) {
-                retAirport = airport;
-                break;
-            }
-        }
-        return retAirport;
     }
 
-    /**
-     * Get airport object
-     * @return airports
-     */
-    public Airports getAirports() {
-            storeAirports = ServerInterface.INSTANCE.getAirports(teamName);
-        return storeAirports;
-    }
+//    /**
+//     * Get airport object
+//     * @return airports
+//     */
+//    public Airports getAirports() {
+//            storeAirports = ServerInterface.INSTANCE.getAirports(teamName);
+//        return storeAirports;
+//    }
+
+//    /**
+//     * Convert gmt to airport local time
+//     * @param origTime is a list of flights to be converted
+//     * @param zoneID for which time is converted
+//     * @return airport local times
+//     */
+//    public static LocalDateTime convertGmtToLocalTime(LocalDateTime origTime, ZoneId zoneID){
+//
+//        //ZoneId zoneID = AirportZone.getZoneByAirportCode(getAirportByCode(airportCode));
+//        ZoneId gmtZone = ZoneId.of("GMT");
+//
+//        ZonedDateTime gmtTime = ZonedDateTime.of(origTime, gmtZone);
+//        LocalDateTime localTime = gmtTime.withZoneSameInstant(zoneID).toLocalDateTime();
+//
+//        return localTime;
+//    }
 
     /**
-     * Convert gmt to airport local time
-     * @param origTime is a list of flights to be converted
-     * @param zoneID for which time is converted
-     * @return airport local times
+     * Convert the departure and arrival gmt time to the airport local time
+     * @param flightList - the ArrayList<Flight> need to be converted
      */
-    public static LocalDateTime convertGmtToLocalTime(LocalDateTime origTime, ZoneId zoneID){
+    public void convertToLocal(ArrayList<Flight> flightList) {
+        String depCode;
+        String arrCode;
+        LocalDateTime depGMT;
+        LocalDateTime arrGMT;
 
-        //ZoneId zoneID = AirportZone.getZoneByAirportCode(getAirportByCode(airportCode));
-        ZoneId gmtZone = ZoneId.of("GMT");
+        for (Flight f:flightList) {
+            depCode = f.departureAirport();
+            arrCode = f.arrivalAirport();
+            depGMT = f.departureTime();
+            arrGMT = f.arrivalTime();
 
-        ZonedDateTime gmtTime = ZonedDateTime.of(origTime, gmtZone);
-        LocalDateTime localTime = gmtTime.withZoneSameInstant(zoneID).toLocalDateTime();
+            // get Airport obj from the hashmap
+            Airport depAirport = airportMap.get(depCode);
+            Airport arrAirport = airportMap.get(arrCode);
 
-        return localTime;
+            // convert by Airport
+            f.departureTime(TimeConverter.convertTimeByAirport(depGMT,depAirport));
+            f.arrivalTime(TimeConverter.convertTimeByAirport(arrGMT,arrAirport));
+
+        }
     }
 }
