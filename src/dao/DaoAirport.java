@@ -22,8 +22,8 @@ import airport.Airport;
 import airport.Airports;
 
 /**
- * @author blake
- * @version 1.1 2019-01-21
+ * @author blake and liz
+ * @version 1.2 2019-04-19
  * @since 2016-02-24
  *
  */
@@ -104,6 +104,7 @@ public class DaoAirport {
 		airport.code(code);
 		airport.latitude(latitude);
 		airport.longitude(longitude);
+		airport.generateZoneId();
 		
 		return airport;
 	}

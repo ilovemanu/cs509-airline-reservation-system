@@ -14,8 +14,8 @@ import utils.Saps;
  * XML received from the server to Java primitives. Attributes are accessed via getter and
  * setter methods.
  *
- * @author alex
- * @version 1 2019-03-16
+ * @author alex and liz
+ * @version 1.1 2019-04-19
  * @since 2019-03-16
  *
  */
@@ -42,6 +42,8 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
      */
     private LocalDateTime mDepartureTime;
     private LocalDateTime mArrivalTime;
+    private LocalDateTime mDepartureLocalTime;
+    private LocalDateTime mArrivalLocalTime;
     /*
      * firstClass and coachPrice
      * Set to String for now.
@@ -155,6 +157,27 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
         return sb.toString();
     }
 
+    /**
+     * Convert object to printable local time string
+     */
+    public String toLocalString() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(mAirplane).append(", ");
+        sb.append(mFlightTime).append(", ");
+        sb.append(mNumber).append(", ");
+        sb.append(mDepartureAirport).append(", ");
+        sb.append(mDepartureLocalTime).append(", ");
+        sb.append(mArrivalAirport).append(", ");
+        sb.append(mArrivalLocalTime).append(", ");
+        sb.append(mCoachPrice).append(", ");
+        sb.append(mCoachReserved).append(", ");
+        sb.append(mFirstClassPrice).append(", ");
+        sb.append(mFirstClassReserved);
+
+        return sb.toString();
+    }
+
 
     /**
      * Set and get the airplane info
@@ -257,6 +280,12 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
     public LocalDateTime departureTime() {
         return mDepartureTime;
     }
+    public void departureLocalTime(LocalDateTime departureTime){
+        mDepartureLocalTime = departureTime;
+    }
+    public LocalDateTime departureLocalTime(){
+        return mDepartureLocalTime;
+    }
 
     /**
      * Set and get the arrivalTime
@@ -273,6 +302,12 @@ public class Flight implements Comparable<Flight>, Comparator<Flight> {
     }
     public LocalDateTime arrivalTime() {
         return mArrivalTime;
+    }
+    public void arrivalLocalTime(LocalDateTime arrivalTime){
+        mArrivalLocalTime = arrivalTime;
+    }
+    public LocalDateTime arrivalLocalTime(){
+        return mArrivalLocalTime;
     }
 
     /**

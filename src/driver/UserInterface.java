@@ -1,4 +1,7 @@
 package driver;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import flight.*;
 import system.FlightController;
@@ -8,7 +11,7 @@ import utils.Saps;
  * This class holds user input for searching flight
  *
  * @author liz and alex
- * @version 1.1 2019-04-13
+ * @version 1.2 2019-04-19
  * @since 2019-04-10
  */
 
@@ -21,7 +24,7 @@ public class UserInterface {
      * @param seatClass is the string value for seating class
      * @param tripType is the string value for trip type
      * @param sortParam is the string value for sorting
-     * @param returnDate is the string value for return date
+     * @param returnTime is the string value for return time
      * @param flightNumber is the int value for reserving flights
      * @param returnFlightNumber is the int value for reserving return flights
      * @param filterType is the int value for filters
@@ -33,10 +36,11 @@ public class UserInterface {
     String seatClass;
     String tripType;
     String sortParam;
-    String returnDate;
+    String returnTime;
     int flightNumber;
     int returnFlightNumber;
     int filterType;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
     // flight seperate to res and view because when filter flight list, the flight reserve number (index) will change
     ArrayList<ArrayList<Flight>> resFlight;
@@ -58,12 +62,13 @@ public class UserInterface {
         seatClass = "Coach";
         tripType = "one-way";
         sortParam = "travelTime";
-        returnDate = "";
+        returnTime = "";
         filterType = 3;
         resFlight = new ArrayList();
         resReturnFlight = new ArrayList();
         viewFlight = new ArrayList();
         viewReturnFlight = new ArrayList();
+
     }
 
     /**
@@ -90,7 +95,7 @@ public class UserInterface {
             try {
                 int selectMenu = scan.nextInt();
                 readUserInput(selectMenu);
-            // handle user not typing integer when selecting
+                // handle user not typing integer when selecting
             } catch (Exception e){
                 System.out.println("Please input integer only");
                 mainMenu();
@@ -141,8 +146,8 @@ public class UserInterface {
                 System.out.println(tripType);
                 break;
             case 7:
-                returnDate = param;
-                System.out.println(returnDate);
+                returnTime = param;
+                System.out.println(returnTime);
                 break;
             case 8:
                 sortParam = param;
@@ -175,21 +180,26 @@ public class UserInterface {
                 // if user search again, reset flight number and return flight number
                 flightNumber = -1;
                 returnFlightNumber = -1;
+
                 // check if departureAirport and arrivalAirport are empty
                 if (depAirport.isEmpty() || arrAirport.isEmpty()) {
                     System.out.println("Please input departure airport and arrival airport");
                     break;
-                  // check if returnDate is empty when user input round-trip
-                } else if(tripType.equalsIgnoreCase("round-trip") && returnDate.isEmpty()){
+                    // check if returnTime is empty when user input round-trip
+                } else if(tripType.equalsIgnoreCase("round-trip") && returnTime.isEmpty()){
                     System.out.println("Please input return date");
                     break;
                 } else {
                     // if user search by departure time
                     if (!depTime.isEmpty()) {
-                        resFlight = controller.searchDepTimeFlight(depAirport, depTime, arrAirport, seatClass);
-                    // if user search by arrival time
+                        resFlight = controller.searchDepTimeFlight(depAirport, depTime, arrAirport, seatClass, depTime);
+                        String nextDay= LocalDate.parse(depTime, formatter).plusDays(1).format(formatter);
+                        resFlight.addAll(controller.searchDepTimeFlight(depAirport, nextDay, arrAirport, seatClass, depTime));
+                        // if user search by arrival time
                     } else {
-                        resFlight = controller.searchArrTimeFlight(depAirport, arrTime, arrAirport, seatClass);
+                        resFlight = controller.searchArrTimeFlight(depAirport, arrTime, arrAirport, seatClass, arrTime);
+                        String nextDay= LocalDate.parse(arrTime, formatter).plusDays(1).format(formatter);
+                        resFlight.addAll(controller.searchArrTimeFlight(depAirport, nextDay, arrAirport, seatClass, arrTime));
                     }
                     controller.sortByParam(sortParam, resFlight, seatClass);
                     printFlightList(resFlight, viewFlight, "Departing");
@@ -199,10 +209,14 @@ public class UserInterface {
                 if (tripType.equalsIgnoreCase("round-trip")){
                     // if user search by departure time
                     if (!depTime.isEmpty()) {
-                        resReturnFlight = controller.searchDepTimeFlight(arrAirport, returnDate, depAirport, seatClass);
-                    // if user search by arrival time
+                        resReturnFlight = controller.searchDepTimeFlight(arrAirport, returnTime, depAirport, seatClass, returnTime);
+                        String nextDay= LocalDate.parse(returnTime, formatter).plusDays(1).format(formatter);
+                        resFlight.addAll(controller.searchDepTimeFlight(depAirport, nextDay, arrAirport, seatClass, returnTime));
+                        // if user search by arrival time
                     } else {
-                        resReturnFlight = controller.searchArrTimeFlight(arrAirport, returnDate, depAirport, seatClass);
+                        resReturnFlight = controller.searchArrTimeFlight(arrAirport, returnTime, depAirport, seatClass, returnTime);
+                        String nextDay= LocalDate.parse(returnTime, formatter).plusDays(1).format(formatter);
+                        resFlight.addAll(controller.searchArrTimeFlight(depAirport, nextDay, arrAirport, seatClass, returnTime));
                     }
                     controller.sortByParam(sortParam, resReturnFlight, seatClass);
                     System.out.println("Return Flight List");
@@ -245,7 +259,8 @@ public class UserInterface {
                         ", Duration:"+info.get(2)+
                         ", Price:"+"$"+info.get(3));
                 for (Flight f : flightList) {
-                    System.out.println(f.toString());
+                    System.out.println(f.toLocalString());
+//                    System.out.println("GMT: " + f.toString());
                 }
                 System.out.println();
             }

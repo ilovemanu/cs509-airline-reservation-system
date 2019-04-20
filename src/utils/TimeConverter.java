@@ -10,8 +10,8 @@ import java.time.ZonedDateTime;
 /**
  * This class holds logic to convert GMT to airport local time.
  *
- * @author alex
- * @version 1.0 2019-04-17
+ * @author alex and liz
+ * @version 1.1 2019-04-19
  * @since 2019-04-17
  */
 
@@ -40,5 +40,10 @@ public class TimeConverter {
         ZonedDateTime zonedTime = ZonedDateTime.of(serverTime, ZoneId.of("GMT"));
 
         return zonedTime.withZoneSameInstant(theZone).toLocalDateTime();
+    }
+
+    public static LocalDateTime convertTimeByZoneId(LocalDateTime serverTime, ZoneId zoneid){
+        ZonedDateTime zonedTime = ZonedDateTime.of(serverTime, ZoneId.of("GMT"));
+        return zonedTime.withZoneSameInstant(zoneid).toLocalDateTime();
     }
 }
