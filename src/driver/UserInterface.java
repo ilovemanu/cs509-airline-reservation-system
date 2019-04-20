@@ -81,7 +81,7 @@ public class UserInterface {
         System.out.println("4. Arrival Date");
         System.out.println("5. Seating Class (Coach, FirstClass)");
         System.out.println("6. Trip Type (one-way, round-trip)");
-        System.out.println("7. Return Date");
+        System.out.println("7. Return Date (Only for round-trip)");
         System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime)");
         System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
         System.out.println("10, Select Flight (0. Select Departing Flight 1. Select Return Flight (Only for round-trip))");
