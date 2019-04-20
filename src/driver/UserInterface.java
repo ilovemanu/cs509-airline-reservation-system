@@ -48,6 +48,8 @@ public class UserInterface {
     ArrayList<ArrayList<Flight>> viewFlight;
     ArrayList<ArrayList<Flight>> viewReturnFlight;
     FlightController controller;
+    ArrayList<ArrayList<Flight>> selectedFlight;
+    ArrayList<ArrayList<Flight>> selectedRetFlight;
 
     /**
      * Default constructor
@@ -68,6 +70,8 @@ public class UserInterface {
         resReturnFlight = new ArrayList();
         viewFlight = new ArrayList();
         viewReturnFlight = new ArrayList();
+        selectedFlight = new ArrayList();
+        selectedRetFlight = new ArrayList();
 
     }
 
@@ -75,14 +79,14 @@ public class UserInterface {
      * List of parameters that required user to input
      */
     public void mainMenu() {
-        System.out.println("1. Departure Airport");
-        System.out.println("2. Arrival Airport");
-        System.out.println("3. Departure Date");
-        System.out.println("4. Arrival Date");
-        System.out.println("5. Seating Class (Coach, FirstClass)");
-        System.out.println("6. Trip Type (one-way, round-trip)");
-        System.out.println("7. Return Date (Only for round-trip)");
-        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime)");
+        System.out.println("1. Departure Airport: "+ depAirport);
+        System.out.println("2. Arrival Airport: "+ arrAirport);
+        System.out.println("3. Departure Date "+ depTime);
+        System.out.println("4. Arrival Date: "+ arrTime);
+        System.out.println("5. Seating Class (Coach, FirstClass): "+ seatClass);
+        System.out.println("6. Trip Type (one-way, round-trip): "+ tripType);
+        System.out.println("7. Return Date (Only for round-trip): "+returnTime);
+        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime): "+ sortParam);
         System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
         System.out.println("10, Select Flight (0. Select Departing Flight 1. Select Return Flight (Only for round-trip))");
         System.out.println("11. Search Flight");
@@ -163,17 +167,59 @@ public class UserInterface {
                 switch (depOrReturn){
                     case 0:
                         flightNumber = scan.nextInt();
-                        buildViewFlightList();
+//                        buildViewFlightList();
+                        selectedFlight.clear();
+                        ArrayList<Flight> depFlightList = resFlight.get(flightNumber);
+                        selectedFlight.add(depFlightList);
+                        System.out.println("Selected Departure Flight Number: " + flightNumber);
+                        printSelectedList(selectedFlight, viewFlight, "");
+
                         // if user input departing flight reserve number and previously select round-trip
                         // then print return flight list for them to choose return flight
                         if (tripType.equalsIgnoreCase("round-trip")) {
                             printFlightList(resReturnFlight, viewReturnFlight, "Returning");
+                            System.out.println("Please select return flight");
+//                            readUserInput(10);
+                            returnFlightNumber = scan.nextInt();
+                            ArrayList<Flight> retFlightList = resReturnFlight.get(returnFlightNumber);
+                            selectedRetFlight.clear();
+                            selectedRetFlight.add(retFlightList);
+                            System.out.println("Selected Departure Flight Number: " + flightNumber);
+                            printSelectedList(selectedFlight, viewFlight, "");
+                            System.out.println("Selected Return Flight Number: " + returnFlightNumber);
+                            printSelectedList(selectedRetFlight, viewFlight, "");
                         }
                         break;
                     case 1:
                         returnFlightNumber = scan.nextInt();
+                        ArrayList<Flight> retFlightList = resReturnFlight.get(returnFlightNumber);
+                        selectedRetFlight.clear();
+                        selectedRetFlight.add(retFlightList);
+                        System.out.println("Selected Departure Flight Number: " + flightNumber);
+                        printSelectedList(selectedFlight, viewFlight, "");
+                        System.out.println("Selected Return Flight Number: " + returnFlightNumber);
+                        printSelectedList(selectedRetFlight, viewFlight, "");
                         break;
                 }
+                if (selectedFlight.isEmpty()==false){
+                    System.out.println("Please press 1 to book selected flights, other to discard");
+                    if (scan.nextInt()==1){
+                        readUserInput(12);}
+                }
+
+//                    case 0:
+//                        flightNumber = scan.nextInt();
+//                        buildViewFlightList();
+//                        // if user input departing flight reserve number and previously select round-trip
+//                        // then print return flight list for them to choose return flight
+//                        if (tripType.equalsIgnoreCase("round-trip")) {
+//                            printFlightList(resReturnFlight, viewReturnFlight, "Returning");
+//                        }
+//                        break;
+//                    case 1:
+//                        returnFlightNumber = scan.nextInt();
+//                        break;
+//                }
                 break;
             case 11:
                 // default value
@@ -267,6 +313,25 @@ public class UserInterface {
         }
     }
 
+    /**
+     * print selected flight
+     */
+    public void printSelectedList(ArrayList<ArrayList<Flight>> flight, ArrayList<ArrayList<Flight>> viewFlight, String departOrReturn) {
+        buildViewFlightList();
+        for (int i=0; i<flight.size(); i++) {
+            ArrayList<Flight> flightList = flight.get(i);
+            ArrayList<String> info = FlightController.getInfo(flightList, seatClass);
+            System.out.println("Departure:"+info.get(0)+
+                    ", Arrival:"+info.get(1)+
+                    ", Duration:"+info.get(2)+
+                    ", Price:"+"$"+info.get(3));
+            for (Flight f : flightList) {
+                System.out.println(f.toString());
+            }
+            System.out.println();
+        }
+
+    }
     /**
      * Build user view's flight
      */
