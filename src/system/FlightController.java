@@ -11,10 +11,7 @@ import flight.Flights;
 import utils.Saps;
 import utils.TimeConverter;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -24,7 +21,7 @@ import java.util.*;
  * It holds logic needed to match flights using user inputs.
  *
  * @author alex, liz, kathy and Priyanka
- * @version 1.6 2019-04-17
+ * @version 1.7 2019-04-19
  * @since 2019-04-01
  */
 
@@ -34,6 +31,8 @@ public class FlightController {
     private Map<String, Airplane> airplaneMap;
     private Map<String, Airport> airportMap;
     private Map<String, Flights> flightsMap;
+    private LocalDate depDate;
+    private LocalDate arrDate;
 //    private static Airports storeAirports;
 
     // format the time
@@ -59,9 +58,11 @@ public class FlightController {
      * @param arrAirport is the arrival airport code
      * @param depTime    is the departure time
      * @param seatClass  is the string value for seat classes
+     * @param userInputDate  is the string value for user input date
      * @return An list of list including all flight combinations
      */
-    public ArrayList<ArrayList<Flight>> searchDepTimeFlight(String depAirport, String depTime, String arrAirport, String seatClass) {
+    public ArrayList<ArrayList<Flight>> searchDepTimeFlight(String depAirport, String depTime, String arrAirport, String seatClass, String userInputDate) {
+        this.depDate = LocalDate.parse(userInputDate,formatter);
         ArrayList<ArrayList<Flight>> allList = new ArrayList();
         depTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, depTime, arrAirport, seatClass);
         return allList;
@@ -105,8 +106,9 @@ public class FlightController {
                 if (subres.size() >= 1) {
                     if (!isValidLayover(subres.get(subres.size() - 1).arrivalTime(), f.departureTime())) continue;
                 }
+                // time validation
+                if(!isValidTime(f) || (subres.size()==0 && !f.departureLocalTime().toLocalDate().isEqual(this.depDate))) continue;
                 // add element (flight) if it's valid
-                if(!isValidTime(f)) continue;
                 subres.add(f);
                 // do recursion
                 depTimeFlightDFS(res, subres, f.arrivalAirport(), f.arrivalTime().format(formatter), arrAirport, seatClass);
@@ -123,9 +125,11 @@ public class FlightController {
      * @param arrAirport is the arrival airport code
      * @param arrTime    is the arrival time
      * @param seatClass  is the string value for seat classes
+     * @param userInputDate  is the string value for user input date
      * @return An list of list including all flight combinations
      */
-    public ArrayList<ArrayList<Flight>> searchArrTimeFlight(String depAirport, String arrTime, String arrAirport, String seatClass) {
+    public ArrayList<ArrayList<Flight>> searchArrTimeFlight(String depAirport, String arrTime, String arrAirport, String seatClass, String userInputDate) {
+        this.arrDate = LocalDate.parse(userInputDate,formatter);
         ArrayList<ArrayList<Flight>> allList = new ArrayList();
         arrTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, arrTime, arrAirport, seatClass);
         // reverse list because tracing back to do arrival time
@@ -140,19 +144,17 @@ public class FlightController {
      */
     public void arrTimeFlightDFS(ArrayList<ArrayList<Flight>> res, ArrayList<Flight> subres,
                                  String depAirport, String arrTime, String arrAirport, String seatClass) {
-        // skip the case when subres is empty at first
-        // get the last element in subres and check if reach the destination
         if (!subres.isEmpty() && subres.get(subres.size() - 1).departureAirport().equalsIgnoreCase(depAirport)) {
             res.add(new ArrayList(subres));
             return;
         }
-        // if subres length equal to max layover + 1 (the length should be 3 because the departure airport + max 2 stops)
+
         if (subres.size() == Saps.MAX_LAYOVER+1) {
             return;
         }
         // pass arriving to server to get the list of flights arriving at an airport
         Flights resFlights = getFromMapOrServer(arrAirport, arrTime, "arriving");
-        // if there's at least 1 element in subres
+
         if (subres.size() >= 1) {
             // get last flight to calculate layover time
             Flight lastFlight = subres.get(subres.size() - 1);
@@ -169,16 +171,12 @@ public class FlightController {
 
         for (Flight f : resFlights) {
             if (isSeatAvailable(f, seatClass)) {
-                // if there's at least 1 element in subres, check if layover time is invalid and then skip
                 if (subres.size() >= 1) {
                     if (!isValidLayover(f.arrivalTime(), subres.get(subres.size() - 1).departureTime())) continue;
                 }
-                // add element (flight) if it's valid
-                if(!isValidTime(f)) continue;
+                if(!isValidTime(f) || (subres.size()==0 && !f.arrivalLocalTime().toLocalDate().isEqual(this.arrDate))) continue;
                 subres.add(f);
-                // do recursion
                 arrTimeFlightDFS(res, subres, depAirport, f.departureTime().format(formatter), f.departureAirport(), seatClass);
-                // remove the last element we add and then continue to do the iteration
                 subres.remove(subres.size()-1);
             }
         }
@@ -195,6 +193,11 @@ public class FlightController {
             return res;
         }
         Flights flights = ServerInterface.INSTANCE.getFlights(teamName, airport, date, searchType);
+        for(Flight f:flights){
+            // time convert
+            f.departureLocalTime(TimeConverter.convertTimeByZoneId(f.departureTime(), airportMap.get(f.departureAirport()).getZoneId()));
+            f.arrivalLocalTime(TimeConverter.convertTimeByZoneId(f.arrivalTime(), airportMap.get(f.arrivalAirport()).getZoneId()));
+        }
         flightsMap.put(key, flights);
         res.addAll(flights);
         return res;
@@ -438,26 +441,26 @@ public class FlightController {
      * Convert the departure and arrival gmt time to the airport local time
      * @param flightList - the ArrayList<Flight> need to be converted
      */
-    public void convertToLocal(ArrayList<Flight> flightList) {
-        String depCode;
-        String arrCode;
-        LocalDateTime depGMT;
-        LocalDateTime arrGMT;
-
-        for (Flight f:flightList) {
-            depCode = f.departureAirport();
-            arrCode = f.arrivalAirport();
-            depGMT = f.departureTime();
-            arrGMT = f.arrivalTime();
-
-            // get Airport obj from the hashmap
-            Airport depAirport = airportMap.get(depCode);
-            Airport arrAirport = airportMap.get(arrCode);
-
-            // convert by Airport
-            f.departureTime(TimeConverter.convertTimeByAirport(depGMT,depAirport));
-            f.arrivalTime(TimeConverter.convertTimeByAirport(arrGMT,arrAirport));
-
-        }
-    }
+//    public void convertToLocal(ArrayList<Flight> flightList) {
+//        String depCode;
+//        String arrCode;
+//        LocalDateTime depGMT;
+//        LocalDateTime arrGMT;
+//
+//        for (Flight f:flightList) {
+//            depCode = f.departureAirport();
+//            arrCode = f.arrivalAirport();
+//            depGMT = f.departureTime();
+//            arrGMT = f.arrivalTime();
+//
+//            // get Airport obj from the hashmap
+//            Airport depAirport = airportMap.get(depCode);
+//            Airport arrAirport = airportMap.get(arrCode);
+//
+//            // convert by Airport
+//            f.departureTime(TimeConverter.convertTimeByAirport(depGMT,depAirport));
+//            f.arrivalTime(TimeConverter.convertTimeByAirport(arrGMT,arrAirport));
+//
+//        }
+//    }
 }

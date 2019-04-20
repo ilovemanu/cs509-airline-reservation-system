@@ -4,6 +4,7 @@
 package airport;
 
 import java.util.Comparator;
+import java.time.ZoneId;
 
 import utils.Saps;
 
@@ -13,8 +14,8 @@ import utils.Saps;
  * XML received from the server to Java primitives. Attributes are accessed via getter and 
  * setter methods.
  * 
- * @author blake
- * @version 1.3 2019-01-21
+ * @author blake and liz
+ * @version 1.3 2019-04-19
  * @since 2016-02-24
  * 
  */
@@ -34,7 +35,7 @@ public class Airport implements Comparable<Airport>, Comparator<Airport> {
 	
 	/** Longitude of the airport in decimal format */
 	private double mLongitude;         
-	
+	private ZoneId mZoneId;
 	/**
 	 * Default constructor
 	 * 
@@ -414,6 +415,14 @@ public class Airport implements Comparable<Airport>, Comparator<Airport> {
 			return false;
 		}
 		return isValidLongitude (lon);
+	}
+
+	public void generateZoneId(){
+		mZoneId = AirportZone.getZoneByAirport(this);
+	}
+
+	public ZoneId getZoneId(){
+		return mZoneId;
 	}
 
 }

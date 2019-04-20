@@ -55,7 +55,7 @@ public class Driver {
 			// with defined departure and arrival and seatClass and sort parameter
 			// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach totalPrice]
 			FlightController controller = new FlightController();
-			ArrayList<ArrayList<Flight>> flights = controller.searchDepTimeFlight(departureCode,departureTime,arrivalCode,seatClass);
+			ArrayList<ArrayList<Flight>> flights = controller.searchDepTimeFlight(departureCode,departureTime,arrivalCode,seatClass, departureTime);
 
 			// apply sorter
 			controller.sortByParam(sortParam, flights, seatClass);
