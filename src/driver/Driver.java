@@ -3,25 +3,17 @@
  */
 package driver;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 
-import airport.Airport;
-import airport.Airports;
-import airplane.Airplane;
-import airplane.Airplanes;
 import flight.Flight;
-import flight.Flights;
-import dao.ServerInterface;
 import system.FlightController;
-import airport.AirportZone;
-import java.time.ZoneId;
-//import static system.FlightController.getAirportByCode;
+
 
 /**
  * @author blake, alex, liz and Priyanka
  * @since 2016-02-24
- * @version 1.2 2019-04-09
+ * @version 1.3 2019-04-20
  *
  */
 public class Driver {
@@ -44,84 +36,96 @@ public class Driver {
 		// else use args to run
 		} else {
 
-			String departureCode = args[0].toUpperCase();
-			String departureTime = args[1];
-			String arrivalCode = args[2].toUpperCase();
-			String seatClass = args[3];
-			String sortParam = ""; // default sort by travelTime
-			if (args.length == 5) { sortParam = args[4]; }// options: depTime, arrTime, travelTime, totalPrice
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
-			// Try to get a list of all matching flights
-			// with defined departure and arrival and seatClass and sort parameter
-			// Test: bos to cle all coach on 2019_05_10 [bos 2019_05_10 cle coach totalPrice]
+			// args: [TripType, seatClass, depCode, arrCode, outDate, inDate, sortparam]
+			// tripType[one-way, round-trip]
+			String tripType = args[0];
+			// seatClass [coach, firstClass]
+			String seatClass = args[1];
+			// departure airport
+			String departureCode = args[2].toUpperCase();
+			// arrival airport
+			String arrivalCode = args[3].toUpperCase();
+			// outbound date
+			String outBoundTime = args[4];
+			// inbound date
+			String inBoundTime = args[5];
+			// sortParam: options: depTime, arrTime, travelTime, totalPrice
+			String sortParam = args[args.length-1]; // default sort by travelTime
+
+			ArrayList<ArrayList<Flight>> outFlights;
+			ArrayList<ArrayList<Flight>> inFlights;
+
+
+			// get one-way search results
 			FlightController controller = new FlightController();
-			ArrayList<ArrayList<Flight>> flights = controller.searchDepTimeFlight(departureCode,departureTime,arrivalCode,seatClass, departureTime);
-
+			outFlights = controller.searchDepTimeFlight(departureCode, outBoundTime, arrivalCode, seatClass, outBoundTime);
+//			String nextDay= LocalDate.parse(outBoundTime, formatter).plusDays(1).format(formatter);
+//			outFlights.addAll(controller.searchDepTimeFlight(departureCode, nextDay, arrivalCode, seatClass, outBoundTime));
 			// apply sorter
-			controller.sortByParam(sortParam, flights, seatClass);
+			controller.sortByParam(sortParam, outFlights, seatClass);
 
-		if (flights.size() == 0) {
-			System.out.println("No " + seatClass + " flights available.");
-		} else {
-			for (ArrayList<Flight> flightList : flights) {
-				// convertTime on results
-//				controller.convertToLocal(flightList);
-				ArrayList<String> info = controller.getInfo(flightList,seatClass);
-				System.out.println("Departure:"+info.get(0)+
-						           ", Arrival:"+info.get(1)+
-						           ", Duration:"+info.get(2)+"min"+
-						           ", Price:"+"$"+info.get(3));
-				for (Flight f : flightList) {
 
-//					String depAirport = f.departureAirport();
-//					ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
-//					String arrAirport = f.arrivalAirport();
-//					ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
-//
-//					f.departureTime(FlightController.convertGmtToLocalTime(f.departureTime(),depZoneID));
-//					f.arrivalTime(FlightController.convertGmtToLocalTime(f.arrivalTime(),arrZoneID));
 
-					System.out.println(f.toString());
+			// display results
+			if (outFlights.size() == 0) {
+				System.out.println("No " + seatClass + " outbound flights available.");
+			} else {
+				System.out.println("Outbound flights available:");
+				for (ArrayList<Flight> flightList : outFlights) {
+
+					ArrayList<String> info = FlightController.getInfo(flightList,seatClass);
+					System.out.println("Departure:"+info.get(0)+
+									   ", Arrival:"+info.get(1)+
+									   ", Duration:"+info.get(2)+"min"+
+									   ", Price:"+"$"+info.get(3));
+
+					for (Flight f : flightList) {
+						System.out.println(f.toLocalString());
+					}
+
+					System.out.println();
 				}
+				System.out.println("END of outbound");
 				System.out.println();
 			}
-		}
+
+			// round-trip: test [round-trip coach bos cle 2019_05_04 2019_05_10 travelTime]
+			if (tripType.equalsIgnoreCase("round-trip")){
+				inFlights = controller.searchDepTimeFlight(arrivalCode, inBoundTime, departureCode, seatClass, inBoundTime);
+				// apply sorter
+				controller.sortByParam(sortParam, inFlights, seatClass);
+
+				// display results
+				if (inFlights.size() == 0) {
+					System.out.println("No " + seatClass + " inbound flights available.");
+				} else {
+					System.out.println("Inbound flights available:");
+					for (ArrayList<Flight> flightList : inFlights) {
+
+						ArrayList<String> info = FlightController.getInfo(flightList,seatClass);
+						System.out.println("Departure:"+info.get(0)+
+								", Arrival:"+info.get(1)+
+								", Duration:"+info.get(2)+"min"+
+								", Price:"+"$"+info.get(3));
+
+						for (Flight f : flightList) {
+							System.out.println(f.toLocalString());
+						}
+
+						System.out.println();
+					}
+					System.out.println("END of inbound");
+				}
+			}
+
 
 //			 test reserve: reserve the first flight/flights on the returned list.
 //			ArrayList<Flight> selected = flights.get(2);
 //			controller.reserveFlight(selected, seatClass);
 			// TODO: implement a confirm function for reservation summary
 		}
-
-//		// check invalid arguments
-//		if (args.length <4) {
-//			System.err.println("Check arguments!");
-//			System.exit(-1);
-//			return;
-//		}
-
-
-//		// Try to get a list of airports
-//		Airports airports = ServerInterface.INSTANCE.getAirports(teamName);
-//		Collections.sort(airports);
-//		for (Airport airport : airports) {
-//			System.out.println(airport.toString());
-//		}
-//		// Try to get a list of airplanes
-//		Airplanes airplanes = ServerInterface.INSTANCE.getAirplanes(teamName);
-//		Collections.sort(airplanes);
-//		for (Airplane airplane : airplanes) {
-//			System.out.println(airplane.toString());
-//		}
-
-//		// Try to get a list of flights
-//		// with a query departureCode(case-insensitive)
-//		// and a query departure date(yyyy_mm_dd).
-//		Flights flights = ServerInterface.INSTANCE.getFlights(teamName, departureCode.toUpperCase(), departureTime);
-//		Collections.sort(flights);
-//		for (Flight flight : flights) {
-//			System.out.println(flight.toString());
-//		}z
 
 	}
 }

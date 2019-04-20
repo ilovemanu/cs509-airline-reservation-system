@@ -3,7 +3,6 @@ package system;
 import airplane.Airplane;
 import airplane.Airplanes;
 import airport.Airport;
-import airport.AirportZone;
 import airport.Airports;
 import dao.ServerInterface;
 import flight.Flight;
@@ -21,7 +20,7 @@ import java.util.*;
  * It holds logic needed to match flights using user inputs.
  *
  * @author alex, liz, kathy and Priyanka
- * @version 1.7 2019-04-19
+ * @version 1.8 2019-04-20
  * @since 2019-04-01
  */
 
@@ -45,9 +44,6 @@ public class FlightController {
         setAirportMap();
         flightsMap = new HashMap();
 
-//        if (storeAirports == null) {
-//            getAirports();
-//        }
     }
 
 
@@ -59,7 +55,7 @@ public class FlightController {
      * @param depTime    is the departure time
      * @param seatClass  is the string value for seat classes
      * @param userInputDate  is the string value for user input date
-     * @return An list of list including all flight combinations
+     * @return A list of list including all flight combinations
      */
     public ArrayList<ArrayList<Flight>> searchDepTimeFlight(String depAirport, String depTime, String arrAirport, String seatClass, String userInputDate) {
         this.depDate = LocalDate.parse(userInputDate,formatter);
@@ -282,16 +278,11 @@ public class FlightController {
         // initiate a new info array list
         ArrayList<String> info = new ArrayList<>();
         // get the departure time of the first leg
-        LocalDateTime depTime = flightList.get(0).departureTime();
+        LocalDateTime depLocalTime = flightList.get(0).departureLocalTime();
         // get the arrival time of the last leg
-        LocalDateTime arrTime = flightList.get(flightList.size() - 1).arrivalTime();
+        LocalDateTime arrLocalTime = flightList.get(flightList.size() - 1).arrivalLocalTime();
 
-//        String depAirport = flightList.get(0).departureAirport();
-//        ZoneId depZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(depAirport));
-//        String arrAirport = flightList.get(flightList.size() - 1).arrivalAirport(); // final arrival airport
-//        ZoneId arrZoneID = AirportZone.getZoneByAirportCode(getAirportByCode(arrAirport));
-
-        long travelTime = Duration.between(depTime, arrTime).toMinutes();
+        long travelTime = Duration.between(depLocalTime, arrLocalTime).toMinutes();
         double totalPrice = 0;
 
         for (Flight f : flightList) {
@@ -303,10 +294,8 @@ public class FlightController {
             }
         }
 
-//        info.add(convertGmtToLocalTime(depTime,depZoneID).toString());
-//        info.add(convertGmtToLocalTime(arrTime,arrZoneID).toString());
-        info.add(depTime.toString());
-        info.add(arrTime.toString());
+        info.add(depLocalTime.toString());
+        info.add(arrLocalTime.toString());
         info.add(String.valueOf(travelTime));
         info.add(String.valueOf(totalPrice));
         return info;

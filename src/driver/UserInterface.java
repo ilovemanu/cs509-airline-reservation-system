@@ -256,7 +256,7 @@ public class UserInterface {
                 System.out.println("Flight Reserve Number: " + i);
                 System.out.println("Departure:"+info.get(0)+
                         ", Arrival:"+info.get(1)+
-                        ", Duration:"+info.get(2)+
+                        ", Duration:"+info.get(2)+"min"+
                         ", Price:"+"$"+info.get(3));
                 for (Flight f : flightList) {
                     System.out.println(f.toLocalString());

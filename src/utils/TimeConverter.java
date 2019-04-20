@@ -24,24 +24,15 @@ public class TimeConverter {
         mZoneId = zoneId;
     }
 
-    // zoneID getter
-    public ZoneId getZoneId() { return mZoneId; }
+//    // zoneID getter
+//    public ZoneId getZoneId() { return mZoneId; }
 
     /**
-     * Get ZoneId by airport code
+     * Convert time by zone id
      * @param serverTime is the time in xml on the server
-     * @param theAirport is the airport to which the time conversion happens
+     * @param zoneid is the airport time zone id
      * @return airport local time
      */
-    public static LocalDateTime convertTimeByAirport(LocalDateTime serverTime, Airport theAirport){
-        // get timezone by airport coordinates
-        ZoneId theZone = AirportZone.getZoneByAirport(theAirport);
-        // match server time with gmt timezone
-        ZonedDateTime zonedTime = ZonedDateTime.of(serverTime, ZoneId.of("GMT"));
-
-        return zonedTime.withZoneSameInstant(theZone).toLocalDateTime();
-    }
-
     public static LocalDateTime convertTimeByZoneId(LocalDateTime serverTime, ZoneId zoneid){
         ZonedDateTime zonedTime = ZonedDateTime.of(serverTime, ZoneId.of("GMT"));
         return zonedTime.withZoneSameInstant(zoneid).toLocalDateTime();
