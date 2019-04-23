@@ -87,10 +87,10 @@ public class UserInterface {
         System.out.println("4. Arrival Date: " + arrTime);
         System.out.println("5. Seating Class (Coach, FirstClass): " + seatClass);
         System.out.println("6. Trip Type (one-way, round-trip): " + tripType);
-        System.out.println("7. Return Date (Only for round-trip): " + returnTime);
-        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime): " + sortParam);
+        System.out.println("7. Return Date (round-trip only): " + returnTime);
+        System.out.println("8. Sort By (depTime, arrTime, totalPrice, travelTime): " + sortParam);
         System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
-        System.out.println("10, Select Flight (0. Select Departing Flight 1. Select Return Flight (Only for round-trip))");
+        System.out.println("10. Select Flight (0. Select Departure Flight 1. Select Return Flight (round-trip only))");
         System.out.println("11. Search Flight");
         System.out.println("12. Reserve Flight");
         System.out.println("13. Show Flight List Again");
@@ -163,22 +163,22 @@ public class UserInterface {
                 break;
 
             case 7:
-                // user input for return/inbound date
+                // user input for return date
                 returnTime = param;
                 LocalDate ret = LocalDate.parse(returnTime, formatter);
                 if(!depTime.isEmpty()) {
                     LocalDate dep = LocalDate.parse(depTime, formatter);
-                    // handle edge case: inbound date cannot be earlier than outbound date
+                    // handle edge case: return date cannot be earlier than departure date
                     if(dep.isAfter(ret) || dep.isEqual(ret)){
-                        System.out.println("Inbound date must be later than outbound date.");
+                        System.out.println("Return date must be later than departure date.");
                         System.out.println();
                         break;
                     }
                 } else if(!arrTime.isEmpty()) {
                     LocalDate arr = LocalDate.parse(arrTime, formatter);
-                    // handle edge case: inbound date cannot be earlier than outbound date
+                    // handle edge case: return date cannot be earlier than departure date
                     if(arr.isAfter(ret) || arr.isEqual(ret)){
-                        System.out.println("Inbound date must be later than outbound date.");
+                        System.out.println("Return date must be later than departure date.");
                         System.out.println();
                         break;
                     }
@@ -199,55 +199,55 @@ public class UserInterface {
                 break;
 
             case 10:
-                // user input for flight selection after defining the outbound/inbound choice
+                // user input for flight selection after defining the departure/return choice
                 // depOrReturn is for user to input departing's or returning's flight reserve number
                 int depOrReturn = Integer.valueOf(param);
                 switch (depOrReturn){
-                    // reserve outbound flight
+                    // reserve departure flight first
                     case 0:
                         flightNumber = scan.nextInt();
 //                        buildViewFlightList();
                         selectedFlight.clear();
                         selectedFlight.add(resFlight.get(flightNumber));
-                        System.out.println("Selected Outbound Flight Number: " + flightNumber);
+                        System.out.println("Selected Departure Flight Number: " + flightNumber);
                         printSelectedList(selectedFlight, viewFlight, "");
 
-                        // if user enters outbound flight reserve number and previously select round-trip
-                        // then print return flight list for them to choose inbound flight
+                        // if user enters departure flight reserve number and previously select round-trip
+                        // then print return flight list for them to choose return flight
                         if (tripType.equalsIgnoreCase("round-trip")) {
                             printFlightList(resReturnFlight, viewReturnFlight, "Returning");
-                            System.out.println("Please select inbound flight:");
+                            System.out.println("Please select return flight:");
                             returnFlightNumber = scan.nextInt();
                             selectedRetFlight.clear();
                             selectedRetFlight.add(resReturnFlight.get(returnFlightNumber));
-                            System.out.println("Selected Outbound Flight Number: " + flightNumber);
+                            System.out.println("Selected Departure Flight Number: " + flightNumber);
                             printSelectedList(selectedFlight, viewFlight, "");
-                            System.out.println("Selected Inbound Flight Number: " + returnFlightNumber);
+                            System.out.println("Selected Return Flight Number: " + returnFlightNumber);
                             printSelectedList(selectedRetFlight, viewFlight, "");
                         }
                         break;
-                    // reserve inbound flight
+                    // reserve return flight first
                     case 1:
                         returnFlightNumber = scan.nextInt();
                         selectedRetFlight.clear();
                         selectedRetFlight.add(resReturnFlight.get(returnFlightNumber));
-                        System.out.println("Selected Outbound Flight Number: " + flightNumber);
+                        System.out.println("Selected Departure Flight Number: " + flightNumber);
                         printSelectedList(selectedFlight, viewFlight, "");
-                        System.out.println("Selected Inbound Flight Number: " + returnFlightNumber);
+                        System.out.println("Selected Return Flight Number: " + returnFlightNumber);
                         printSelectedList(selectedRetFlight, viewFlight, "");
 
 
-                        // if user enters inbound flight reserve number and previously select round-trip
-                        // then print return flight list for them to choose outbound flight
+                        // if user enters return flight reserve number and previously select round-trip
+                        // then print departure flight list for them to choose departure flight
                         if (flightNumber==-1) {
                             printFlightList(resFlight, viewFlight, "Departing");
-                            System.out.println("Please select outbound flight:");
+                            System.out.println("Please select departure flight:");
                             flightNumber = scan.nextInt();
                             selectedFlight.clear();
                             selectedFlight.add(resFlight.get(flightNumber));
-                            System.out.println("Selected Outbound Flight Number: " + flightNumber);
+                            System.out.println("Selected Departure Flight Number: " + flightNumber);
                             printSelectedList(selectedFlight, viewFlight, "");
-                            System.out.println("Selected Inbound Flight Number: " + returnFlightNumber);
+                            System.out.println("Selected Return Flight Number: " + returnFlightNumber);
                             printSelectedList(selectedRetFlight, viewFlight, "");
                         }
                         break;
@@ -319,13 +319,13 @@ public class UserInterface {
             case 12:
                 // reserve flight(s)
                 controller.reserveFlight(viewFlight.get(flightNumber), seatClass);
-                System.out.println("Reserved Outbound Flight:");
+                System.out.println("Reserved Departure Flight:");
                 // print out reservation summary
                 printSelectedList(selectedFlight, viewFlight, "");
                 if(tripType.equalsIgnoreCase("round-trip")){
                     controller.reserveFlight(viewReturnFlight.get(returnFlightNumber), seatClass);
                     // print out reservation summary
-                    System.out.println("Reserved Inbound Flight:");
+                    System.out.println("Reserved Return Flight:");
                     printSelectedList(selectedRetFlight, viewFlight, "");
                 }
                 break;
