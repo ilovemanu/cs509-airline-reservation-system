@@ -302,6 +302,7 @@ public class UserInterface {
                     System.out.println("Return Flight List:");
                     printFlightList(resReturnFlight, viewReturnFlight, "Returning");
                 }
+
                 break;
         }
         mainMenu();
@@ -316,7 +317,7 @@ public class UserInterface {
             System.out.println("No " + departOrReturn + " " + seatClass + " flights available.");
             return;
         } else {
-            for (int i=0; i<flight.size(); i++) {
+            for (int i=0; i<viewFlight.size(); i++) {
                 ArrayList<Flight> flightList = viewFlight.get(i);
                 ArrayList<String> info = FlightController.getInfo(flightList, seatClass);
                 System.out.println("Flight Reserve Number: " + i);
