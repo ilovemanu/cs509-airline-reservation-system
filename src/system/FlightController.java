@@ -46,6 +46,12 @@ public class FlightController {
 
     }
 
+    /**
+     * airport hashmap getter.
+     */
+    public Map<String, Airport> getAirportMap() {
+        return airportMap;
+    }
 
     /**
      * Search flight by departure date

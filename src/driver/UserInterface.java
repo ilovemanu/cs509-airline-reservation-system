@@ -2,6 +2,8 @@ package driver;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import airport.Airport;
 import flight.*;
 import system.FlightController;
 import utils.Saps;
@@ -53,6 +55,8 @@ public class UserInterface {
     ArrayList<ArrayList<Flight>> selectedFlight;
     ArrayList<ArrayList<Flight>> selectedRetFlight;
 
+    Map<String, Airport> airportMap;
+
     /**
      * Default constructor
      */
@@ -75,6 +79,8 @@ public class UserInterface {
         selectedFlight = new ArrayList();
         selectedRetFlight = new ArrayList();
 
+        controller.setAirportMap();
+        airportMap = controller.getAirportMap();
     }
 
     /**
@@ -121,50 +127,88 @@ public class UserInterface {
         if(selectMenu<11 && scan.hasNext()) {
             param = scan.next();
             // if user type 11, 12, 13 then assign empty string
-        } else param = "";
+        } else {
+            param = "";
+        }
 
         switch(selectMenu) {
             case 1:
                 // convert string to upper case no matter user input lower or upper case
-                depAirport = param.toUpperCase();
-                System.out.println(depAirport);
-                break;
+                // check if code does exist
+                if (isValidCode(param)) {
+                    depAirport = param.toUpperCase();
+                    System.out.println(depAirport);
+                    System.out.println();
+                    break;
+                } else {
+                    System.out.println("===Please enter a valid airport.===");
+                    System.out.println();
+                    break;
+                }
+
 
             case 2:
                 // convert string to upper case no matter user input lower or upper case
-                arrAirport = param.toUpperCase();
-                System.out.println(arrAirport);
-                break;
+                // check if code does exist
+                if (isValidCode(param)) {
+                    arrAirport = param.toUpperCase();
+                    System.out.println(arrAirport);
+                    System.out.println();
+                    break;
+                } else {
+                    System.out.println("===Please enter a valid airport.===");
+                    System.out.println();
+                    break;
+                }
 
             case 3:
                 // if user search by departure time, then set arrival time to empty string
-                depTime = param;
-                arrTime = "";
-                System.out.println(depTime);
-                break;
+                // check if date is valid
+                if (isValidDate(param)) {
+                    depTime = param;
+                    arrTime = "";
+                    System.out.println(depTime);
+                    System.out.println();
+                    break;
+                } else {
+                    System.out.println("===Please enter a valid date.===");
+                    System.out.println();
+                    break;
+                }
+
 
             case 4:
                 // if user search by arrival time, then set departure time to empty string
                 arrTime = param;
                 depTime = "";
                 System.out.println(arrTime);
+                System.out.println();
                 break;
 
             case 5:
                 // user input for seatClass
                 seatClass = param;
                 System.out.println(seatClass);
+                System.out.println();
                 break;
 
             case 6:
                 // user input for trip type
                 tripType = param;
                 System.out.println(tripType);
+                System.out.println();
                 break;
 
             case 7:
                 // user input for return date
-                returnTime = param;
+                // check if date is valid
+                if (isValidDate(param)) {
+                    returnTime = param;
+                } else {
+                    System.out.println("===Please enter a valid date.===");
+                    System.out.println();
+                    break;
+                }
                 LocalDate ret = LocalDate.parse(returnTime, formatter);
                 if(!depTime.isEmpty()) {
                     LocalDate dep = LocalDate.parse(depTime, formatter);
@@ -184,18 +228,21 @@ public class UserInterface {
                     }
                 }
                 System.out.println(returnTime);
+                System.out.println();
                 break;
 
             case 8:
                 // user input for sort param
                 sortParam = param;
                 System.out.println(sortParam);
+                System.out.println();
                 break;
 
             case 9:
                 // user input for filter param
                 filterType = Integer.valueOf(param);
                 System.out.println(filterType);
+                System.out.println();
                 break;
 
             case 10:
@@ -389,6 +436,7 @@ public class UserInterface {
         }
 
     }
+
     /**
      * Build user view's flight
      */
@@ -427,6 +475,34 @@ public class UserInterface {
             }
             viewReturnFlight.add(flightList);
         }
+    }
 
+    /**
+     * Check user input airport code
+     *
+     * @param param is user input airport code
+     *
+     * @return true is the code is in the database
+     */
+    public boolean isValidCode(String param) {
+        return airportMap.containsKey(param.toUpperCase());
+    }
+
+    /**
+     * Check user input departure/return dates
+     *
+     * @param param is user input date
+     *
+     * @return true is the date is in the database
+     */
+    public boolean isValidDate(String param) {
+        LocalDate date = LocalDate.parse(param, formatter);
+        if (date.getYear()==Saps.DEFAULT_YEAR
+                && date.getMonthValue()==Saps.DEFAULT_MONTH
+                && date.getDayOfMonth()>=Saps.MIN_DATE
+                && date.getDayOfMonth()<=Saps.MAX_DATE ) {
+            return true;
+        }
+        return false;
     }
 }
