@@ -285,19 +285,23 @@ public class FlightController {
         long travelTime = Duration.between(depLocalTime, arrLocalTime).toMinutes();
         double totalPrice = 0;
 
+        // add up price for each leg
         for (Flight f : flightList) {
             if (seatClass.equalsIgnoreCase("coach")) {
-                // "$1,000.8"
+                // "$1,000.80"
                 totalPrice += Double.valueOf(f.coachPrice().substring(1).replaceAll(",", ""));
             } else {
                 totalPrice += Double.valueOf(f.firstClassPrice().substring(1).replaceAll(",",""));
             }
         }
 
+        // format the price
+        String formattedPrice = String.format("$%,.2f", totalPrice);
+
         info.add(depLocalTime.toString());
         info.add(arrLocalTime.toString());
         info.add(String.valueOf(travelTime));
-        info.add(String.valueOf(totalPrice));
+        info.add(formattedPrice);
         return info;
     }
 
