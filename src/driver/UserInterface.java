@@ -103,7 +103,7 @@ public class UserInterface {
                 readUserInput(selectMenu);
                 // handle user not typing integer when selecting
             } catch (Exception e){
-                System.out.println("Please input integer only.");
+                System.out.println("===Please enter integer only.===");
                 System.out.println();
                 mainMenu();
             }
@@ -170,7 +170,7 @@ public class UserInterface {
                     LocalDate dep = LocalDate.parse(depTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
                     if(dep.isAfter(ret) || dep.isEqual(ret)){
-                        System.out.println("Return date must be later than departure date.");
+                        System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
                     }
@@ -178,7 +178,7 @@ public class UserInterface {
                     LocalDate arr = LocalDate.parse(arrTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
                     if(arr.isAfter(ret) || arr.isEqual(ret)){
-                        System.out.println("Return date must be later than departure date.");
+                        System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
                     }
@@ -270,11 +270,13 @@ public class UserInterface {
 
                 // check if departureAirport and arrivalAirport are empty
                 if (depAirport.isEmpty() || arrAirport.isEmpty()) {
-                    System.out.println("Please enter Departure airport and Arrival airport");
+                    System.out.println("===Please enter departure airport AND arrival airport===");
+                    System.out.println();
                     break;
                     // check if returnTime is empty when user input round-trip
                 } else if(tripType.equalsIgnoreCase("round-trip") && returnTime.isEmpty()){
-                    System.out.println("Please enter return date");
+                    System.out.println("===Please enter a RETURN date.===");
+                    System.out.println();
                     break;
                 } else {
                     // if user search by departure time
@@ -291,7 +293,7 @@ public class UserInterface {
                     // apply sorter
                     controller.sortByParam(sortParam, resFlight, seatClass);
                     printFlightList(resFlight, viewFlight, "Departing");
-                    System.out.println("===================================THE END========================================");
+                    System.out.println("===================================END========================================");
                 }
 
                 // if trip type is round-trip, search return flight
@@ -311,7 +313,7 @@ public class UserInterface {
                     controller.sortByParam(sortParam, resReturnFlight, seatClass);
                     System.out.println("Return Flight List");
                     printFlightList(resReturnFlight, viewReturnFlight, "Returning");
-                    System.out.println("===================================THE END========================================");
+                    System.out.println("===================================END========================================");
 
                 }
                 break;
