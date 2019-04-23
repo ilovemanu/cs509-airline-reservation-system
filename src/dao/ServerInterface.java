@@ -368,7 +368,8 @@ public enum ServerInterface {
 
 				System.out.println("Reservation is successful!");
 			}
-			// TODO: if code does not look good (ie. 304, 400), return false
+			// if code does not look good (ie. 304, 400), return false
+			else { System.out.println("Reservation Failed! Please check the response code."); }
 
 		}
 		catch (IOException ex) {

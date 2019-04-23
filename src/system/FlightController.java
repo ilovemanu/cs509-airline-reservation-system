@@ -358,8 +358,12 @@ public class FlightController {
             if (isReserved) {
                 isUnlocked = ServerInterface.INSTANCE.unlock(teamName);
             }
-            // TODO: if isLocked is not successful
-            // TODO: if isReserved is not successful
+            // if not, also unlock, and ask to try again.
+            else {
+                isUnlocked = ServerInterface.INSTANCE.unlock(teamName);
+                System.out.println("Please try again.");
+            }
+
         }
     }
 
@@ -399,57 +403,4 @@ public class FlightController {
             airportMap.put(code, a);
         }
     }
-
-//    /**
-//     * Get airport object
-//     * @return airports
-//     */
-//    public Airports getAirports() {
-//            storeAirports = ServerInterface.INSTANCE.getAirports(teamName);
-//        return storeAirports;
-//    }
-
-//    /**
-//     * Convert gmt to airport local time
-//     * @param origTime is a list of flights to be converted
-//     * @param zoneID for which time is converted
-//     * @return airport local times
-//     */
-//    public static LocalDateTime convertGmtToLocalTime(LocalDateTime origTime, ZoneId zoneID){
-//
-//        //ZoneId zoneID = AirportZone.getZoneByAirportCode(getAirportByCode(airportCode));
-//        ZoneId gmtZone = ZoneId.of("GMT");
-//
-//        ZonedDateTime gmtTime = ZonedDateTime.of(origTime, gmtZone);
-//        LocalDateTime localTime = gmtTime.withZoneSameInstant(zoneID).toLocalDateTime();
-//
-//        return localTime;
-//    }
-
-    /**
-     * Convert the departure and arrival gmt time to the airport local time
-     * @param flightList - the ArrayList<Flight> need to be converted
-     */
-//    public void convertToLocal(ArrayList<Flight> flightList) {
-//        String depCode;
-//        String arrCode;
-//        LocalDateTime depGMT;
-//        LocalDateTime arrGMT;
-//
-//        for (Flight f:flightList) {
-//            depCode = f.departureAirport();
-//            arrCode = f.arrivalAirport();
-//            depGMT = f.departureTime();
-//            arrGMT = f.arrivalTime();
-//
-//            // get Airport obj from the hashmap
-//            Airport depAirport = airportMap.get(depCode);
-//            Airport arrAirport = airportMap.get(arrCode);
-//
-//            // convert by Airport
-//            f.departureTime(TimeConverter.convertTimeByAirport(depGMT,depAirport));
-//            f.arrivalTime(TimeConverter.convertTimeByAirport(arrGMT,arrAirport));
-//
-//        }
-//    }
 }
