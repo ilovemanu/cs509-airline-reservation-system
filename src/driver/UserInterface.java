@@ -1,4 +1,7 @@
 package driver;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -79,14 +82,14 @@ public class UserInterface {
      * List of parameters that required user to input
      */
     public void mainMenu() {
-        System.out.println("1. Departure Airport: "+ depAirport);
-        System.out.println("2. Arrival Airport: "+ arrAirport);
-        System.out.println("3. Departure Date "+ depTime);
-        System.out.println("4. Arrival Date: "+ arrTime);
-        System.out.println("5. Seating Class (Coach, FirstClass): "+ seatClass);
-        System.out.println("6. Trip Type (one-way, round-trip): "+ tripType);
-        System.out.println("7. Return Date (Only for round-trip): "+returnTime);
-        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime): "+ sortParam);
+        System.out.println("1. Departure Airport: " + depAirport);
+        System.out.println("2. Arrival Airport: " + arrAirport);
+        System.out.println("3. Departure Date " + depTime);
+        System.out.println("4. Arrival Date: " + arrTime);
+        System.out.println("5. Seating Class (Coach, FirstClass): " + seatClass);
+        System.out.println("6. Trip Type (one-way, round-trip): " + tripType);
+        System.out.println("7. Return Date (Only for round-trip): " + returnTime);
+        System.out.println("8. Sorting (depTime, arrTime, totalPrice, travelTime): " + sortParam);
         System.out.println("9. Filter (0. Non Stop, 1. One Stop, 2. Two Stops, 3. List All)");
         System.out.println("10, Select Flight (0. Select Departing Flight 1. Select Return Flight (Only for round-trip))");
         System.out.println("11. Search Flight");
@@ -122,11 +125,13 @@ public class UserInterface {
 
         switch(selectMenu) {
             case 1:
-                depAirport = param;
+                // convert string to upper case no matter user input lower or upper case
+                depAirport = param.toUpperCase();
                 System.out.println(depAirport);
                 break;
             case 2:
-                arrAirport = param;
+                // convert string to upper case no matter user input lower or upper case
+                arrAirport = param.toUpperCase();
                 System.out.println(arrAirport);
                 break;
             case 3:
@@ -151,6 +156,20 @@ public class UserInterface {
                 break;
             case 7:
                 returnTime = param;
+                LocalDate ret = LocalDate.parse(returnTime, formatter);
+                if(!depTime.isEmpty()) {
+                    LocalDate dep = LocalDate.parse(depTime, formatter);
+                    if(dep.isAfter(ret) || dep.isEqual(ret)){
+                        System.out.println("Inbound date must later than the outbound date.");
+                        break;
+                    }
+                } else if(!arrTime.isEmpty()) {
+                    LocalDate arr = LocalDate.parse(arrTime, formatter);
+                    if(arr.isAfter(ret) || arr.isEqual(ret)){
+                        System.out.println("Inbound date must later than the outbound date.");
+                        break;
+                    }
+                }
                 System.out.println(returnTime);
                 break;
             case 8:
@@ -204,7 +223,8 @@ public class UserInterface {
                 if (selectedFlight.isEmpty()==false){
                     System.out.println("Please press 1 to book selected flights, other to discard");
                     if (scan.nextInt()==1){
-                        readUserInput(12);}
+                        readUserInput(12);
+                    }
                 }
 
 //                    case 0:
@@ -297,7 +317,7 @@ public class UserInterface {
             return;
         } else {
             for (int i=0; i<flight.size(); i++) {
-                ArrayList<Flight> flightList = flight.get(i);
+                ArrayList<Flight> flightList = viewFlight.get(i);
                 ArrayList<String> info = FlightController.getInfo(flightList, seatClass);
                 System.out.println("Flight Reserve Number: " + i);
                 System.out.println("Departure:"+info.get(0)+
