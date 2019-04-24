@@ -89,7 +89,7 @@ public class UserInterface {
     public void mainMenu() {
         System.out.println("1. Departure Airport: " + depAirport);
         System.out.println("2. Arrival Airport: " + arrAirport);
-        System.out.println("3. Departure Date " + depTime);
+        System.out.println("3. Departure Date: " + depTime);
         System.out.println("4. Arrival Date: " + arrTime);
         System.out.println("5. Seating Class (Coach, FirstClass): " + seatClass);
         System.out.println("6. Trip Type (one-way, round-trip): " + tripType);
@@ -213,7 +213,7 @@ public class UserInterface {
                 if(!depTime.isEmpty()) {
                     LocalDate dep = LocalDate.parse(depTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
-                    if(dep.isAfter(ret) || dep.isEqual(ret)){
+                    if(dep.isAfter(ret)){
                         System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
@@ -221,7 +221,7 @@ public class UserInterface {
                 } else if(!arrTime.isEmpty()) {
                     LocalDate arr = LocalDate.parse(arrTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
-                    if(arr.isAfter(ret) || arr.isEqual(ret)){
+                    if(arr.isAfter(ret)){
                         System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
@@ -262,6 +262,11 @@ public class UserInterface {
                         // if user enters departure flight reserve number and previously select round-trip
                         // then print return flight list for them to choose return flight
                         if (tripType.equalsIgnoreCase("round-trip")) {
+                            if(viewReturnFlight.isEmpty()) {
+                                System.out.println("No valid return flight, please choose another return date.");
+                                break;
+                            }
+                            System.out.println("Return flight list");
                             printFlightList(resReturnFlight, viewReturnFlight, "Returning");
                             System.out.println("Please select return flight:");
                             returnFlightNumber = scan.nextInt();
@@ -300,11 +305,21 @@ public class UserInterface {
                         break;
                 }
                 // display a message for user to confirm flight selection before the reserve step
-                if (!selectedFlight.isEmpty()){
-                    System.out.println("Please press 1 to book selected flights, press 0 to discard");
-                    // if confirmed, execute case 12
-                    if (scan.nextInt()==1){
-                        readUserInput(12);
+                if (tripType.equalsIgnoreCase("one-way")) {
+                    if (!selectedFlight.isEmpty()) {
+                        System.out.println("Please press 1 to book selected flights, press 0 to discard");
+                        // if confirmed, execute case 12
+                        if (scan.nextInt() == 1) {
+                            readUserInput(12);
+                        }
+                    }
+                } else if (tripType.equalsIgnoreCase("round-trip")) {
+                    if (!selectedRetFlight.isEmpty() && !selectedFlight.isEmpty()) {
+                        System.out.println("Please press 1 to book selected flights, press 0 to discard");
+                        // if confirmed, execute case 12
+                        if (scan.nextInt() == 1) {
+                            readUserInput(12);
+                        }
                     }
                 }
                 break;
@@ -377,6 +392,7 @@ public class UserInterface {
                     System.out.println("Reserved Return Flight:");
                     printSelectedList(selectedRetFlight, viewFlight, "");
                 }
+                resetToDefault();
                 break;
 
             case 13:
@@ -430,7 +446,7 @@ public class UserInterface {
                     ", Duration:"+info.get(2)+
                     ", Price:"+"$"+info.get(3));
             for (Flight f : flightList) {
-                System.out.println(f.toString());
+                System.out.println(f.toLocalString());
             }
             System.out.println();
         }
@@ -504,5 +520,19 @@ public class UserInterface {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Reset param to default value after reserving flight
+     */
+    public void resetToDefault() {
+        this.depAirport = "";
+        this.arrAirport = "";
+        this.depTime = "";
+        this.arrTime = "";
+        this.seatClass = "Coach";
+        this.tripType = "one-way";
+        this.sortParam = "travelTime";
+        this.returnTime = "";
     }
 }
