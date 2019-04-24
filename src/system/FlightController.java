@@ -64,6 +64,7 @@ public class FlightController {
      * @return A list of list including all flight combinations
      */
     public ArrayList<ArrayList<Flight>> searchDepTimeFlight(String depAirport, String depTime, String arrAirport, String seatClass, String userInputDate) {
+        flightsMap.clear();
         this.depDate = LocalDate.parse(userInputDate,formatter);
         ArrayList<ArrayList<Flight>> allList = new ArrayList();
         depTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, depTime, arrAirport, seatClass);
@@ -131,6 +132,7 @@ public class FlightController {
      * @return An list of list including all flight combinations
      */
     public ArrayList<ArrayList<Flight>> searchArrTimeFlight(String depAirport, String arrTime, String arrAirport, String seatClass, String userInputDate) {
+        flightsMap.clear();
         this.arrDate = LocalDate.parse(userInputDate,formatter);
         ArrayList<ArrayList<Flight>> allList = new ArrayList();
         arrTimeFlightDFS(allList, new ArrayList<Flight>(), depAirport, arrTime, arrAirport, seatClass);

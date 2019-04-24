@@ -214,6 +214,7 @@ public class UserInterface {
                     LocalDate dep = LocalDate.parse(depTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
                     if(dep.isAfter(ret)){
+                        returnTime = "";
                         System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
@@ -222,6 +223,7 @@ public class UserInterface {
                     LocalDate arr = LocalDate.parse(arrTime, formatter);
                     // handle edge case: return date cannot be earlier than departure date
                     if(arr.isAfter(ret)){
+                        returnTime = "";
                         System.out.println("===Return date must be later than departure date.===");
                         System.out.println();
                         break;
@@ -280,6 +282,12 @@ public class UserInterface {
                         break;
                     // reserve return flight first
                     case 1:
+                        // if user enters return flight reserve number first instead of departing flight first
+                        // then print departure flight list for them to choose departure flight
+                        if(flightNumber==-1) {
+                            System.out.println("Please select departing flight first.");
+                            break;
+                        }
                         returnFlightNumber = scan.nextInt();
                         selectedRetFlight.clear();
                         selectedRetFlight.add(resReturnFlight.get(returnFlightNumber));
@@ -291,17 +299,17 @@ public class UserInterface {
 
                         // if user enters return flight reserve number and previously select round-trip
                         // then print departure flight list for them to choose departure flight
-                        if (flightNumber==-1) {
-                            printFlightList(resFlight, viewFlight, "Departing");
-                            System.out.println("Please select departure flight:");
-                            flightNumber = scan.nextInt();
-                            selectedFlight.clear();
-                            selectedFlight.add(resFlight.get(flightNumber));
-                            System.out.println("Selected Departure Flight Number: " + flightNumber);
-                            printSelectedList(selectedFlight, viewFlight, "");
-                            System.out.println("Selected Return Flight Number: " + returnFlightNumber);
-                            printSelectedList(selectedRetFlight, viewFlight, "");
-                        }
+//                        if (flightNumber==-1) {
+//                            printFlightList(resFlight, viewFlight, "Departing");
+//                            System.out.println("Please select departure flight:");
+//                            flightNumber = scan.nextInt();
+//                            selectedFlight.clear();
+//                            selectedFlight.add(resFlight.get(flightNumber));
+//                            System.out.println("Selected Departure Flight Number: " + flightNumber);
+//                            printSelectedList(selectedFlight, viewFlight, "");
+//                            System.out.println("Selected Return Flight Number: " + returnFlightNumber);
+//                            printSelectedList(selectedRetFlight, viewFlight, "");
+//                        }
                         break;
                 }
                 // display a message for user to confirm flight selection before the reserve step
@@ -398,9 +406,11 @@ public class UserInterface {
             case 13:
                 // show flight list again
                 printFlightList(resFlight, viewFlight, "Departing");
+                System.out.println("===================================END========================================");
                 if(resReturnFlight.size()>0){
                     System.out.println("Return Flight List:");
                     printFlightList(resReturnFlight, viewReturnFlight, "Returning");
+                    System.out.println("===================================END========================================");
                 }
                 break;
         }
@@ -534,5 +544,6 @@ public class UserInterface {
         this.tripType = "one-way";
         this.sortParam = "travelTime";
         this.returnTime = "";
+        this.filterType = 3;
     }
 }
